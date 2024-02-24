@@ -238,7 +238,7 @@ const Dashboard = () => {
       (batteryPercentage / 100) * (powerReserve / consumptionRate);
     return timeRemaining.toFixed(2); // return time remaining in hours with two decimal places
   };
-  const chargingWidth = `${evcar.evBatteryCapacity}%`;
+  const chargingWidth = `${evcar?.evBatteryCapacity}%`;
   const calculateUsingPrivate = (powerConsumption, electricityCost) => {
     return (powerConsumption * electricityCost).toFixed(2); // Returns the cost in dollars
   };
@@ -256,19 +256,19 @@ const Dashboard = () => {
   const emissionFactor = 0.5; // kgCO2/kWh (example value)
 
   const usingPrivateCost = calculateUsingPrivate(
-    evcar.evPowerReserve,
+    evcar?.evPowerReserve,
     electricityCost
   );
-  const fuelSaved = calculateCO2Saved(evcar.evPowerReserve, emissionFactor);
+  const fuelSaved = calculateCO2Saved(evcar?.evPowerReserve, emissionFactor);
 
   useEffect(() => {
     // Update the time remaining whenever the battery or type of vehicle changes
     const timeRemaining = calculateTimeRemaining(
-      evcar.evBatteryCapacity,
-      evcar.evPowerReserve
+      evcar?.evBatteryCapacity,
+      evcar?.evPowerReserve
     );
     setEvcar((prevState) => ({ ...prevState, time: timeRemaining }));
-  }, [evcar.evBatteryCapacity, evcar.evName, evcar.evPowerReserve]);
+  }, [evcar?.evBatteryCapacity, evcar?.evName, evcar?.evPowerReserve]);
 
   return (
     <div className="w-full gap-4 h-fit overflow-y-auto flex flex-col justify-center items-center">
@@ -279,7 +279,7 @@ const Dashboard = () => {
           <div className="flex justify-center items-center gap-4">
             {/* <div
               className={`transition-all cursor-pointer duration-200 ${
-                evcar.car === "Nissan" ? "text-[#44DDA0]" : "text-[#575757]"
+                evcar?.car === "Nissan" ? "text-[#44DDA0]" : "text-[#575757]"
               }`}
               onClick={() => {
                 setEvcar({
@@ -294,7 +294,7 @@ const Dashboard = () => {
             </div>
             <div
               className={`transition-all cursor-pointer duration-200 ${
-                evcar.car === "Tesla" ? "text-[#44DDA0]" : "text-[#575757]"
+                evcar?.car === "Tesla" ? "text-[#44DDA0]" : "text-[#575757]"
               }`}
               onClick={() => {
                 setEvcar({
@@ -312,7 +312,7 @@ const Dashboard = () => {
                 <div
                   key={index}
                   className={`transition-all cursor-pointer duration-200 ${
-                    evcar.evName === car.evName
+                    evcar?.evName === car.evName
                       ? "text-[#44DDA0]"
                       : "text-[#575757]"
                   }`}
@@ -331,7 +331,7 @@ const Dashboard = () => {
           <div className="flex flex-col">
             <div>Time</div>
             <div className="flex gap-1 items-center">
-              <span className="text-3xl text-white">{evcar.time}</span>
+              <span className="text-3xl text-white">{evcar?.time}</span>
               {" h"}
             </div>
           </div>
@@ -340,12 +340,12 @@ const Dashboard = () => {
             <div className="flex gap-1 items-center">
               <span
                 className={`text-3xl ${
-                  evcar.evBatteryCapacity > 50
+                  evcar?.evBatteryCapacity > 50
                     ? "text-[#44DDA0]"
                     : "text-[#B23434]"
                 }`}
               >
-                {evcar.evBatteryCapacity}
+                {evcar?.evBatteryCapacity}
               </span>
               {" %"}
             </div>
@@ -354,7 +354,7 @@ const Dashboard = () => {
             <div>Power Reserve</div>
             <div className="flex gap-1 items-center">
               <span className="text-3xl text-white">
-                {evcar.evPowerReserve}
+                {evcar?.evPowerReserve}
               </span>
               {" km"}
             </div>
@@ -373,7 +373,7 @@ const Dashboard = () => {
             <div className="absolute top-0 right-5 flex items-center justify-center h-full text-white">
               <div className="flex flex-col text-[#575757]">
                 <div className="flex justify-center gap-1 items-center">
-                  <span className="text-2xl text-white">{evcar.time}</span>
+                  <span className="text-2xl text-white">{evcar?.time}</span>
                   {" h"}
                 </div>
                 <div className="text-sm">Remaining</div>
