@@ -140,6 +140,46 @@ const Stations = () => {
       .join(" ");
   };
 
+  const getDirections = async (origin, destination) => {
+    const apiKey =  "AIzaSyAGHFR3hfwbf_yGyfkPFZ7aSfj7Jr7RDfg"; 
+    const directionsService = new google.maps.DirectionsService();
+    const directionsRenderer = new google.maps.DirectionsRenderer();
+    
+    // Set up map if not already initialized
+    if (!map) {
+      map = new google.maps.Map(document.getElementById("map"), {
+        zoom: 16,
+        center: { lat: 37.7937, lng: -122.3965 },
+      });
+    }
+  
+    // Configure DirectionsRenderer to render on map
+    directionsRenderer.setMap(map);
+  
+    // Convert origin and destination to LatLng objects
+    const originLatLng = new google.maps.LatLng(origin.latitude, origin.longitude);
+    const destinationLatLng = new google.maps.LatLng(destination.latitude, destination.longitude);
+  
+    // Configure directions request
+    const request = {
+      origin: originLatLng,
+      destination: destinationLatLng,
+      travelMode: google.maps.TravelMode.DRIVING
+    };
+  
+    // Request directions
+    directionsService.route(request, (response, status) => {
+      if (status === google.maps.DirectionsStatus.OK) {
+        // Display the route on the map
+        directionsRenderer.setDirections(response);
+      } else {
+        console.error("Error fetching directions:", status);
+      }
+    });
+  };
+  
+  
+
   return (
     <div style={{ position: "relative" }}>
       <div id="map" style={{ height: "900px", width: "100%" }}></div>
@@ -195,10 +235,9 @@ const Stations = () => {
             </p> */}
             <p className="my- text-[#44dba0]">Open 24 Hours</p>
             <div className="flex items-center">
-            <FaPhoneAlt size={16} />
-            <p className="my-2 ml-2">{station?.internationalPhoneNumber}</p>
-              </div>
-            
+              <FaPhoneAlt size={16} />
+              <p className="my-2 ml-2">{station?.internationalPhoneNumber}</p>
+            </div>
             {/* <p>{station?.websiteUri}</p> */}
             {station?.evChargeOptions?.connectorAggregation?.map(
               (connector, i) => (
@@ -220,6 +259,15 @@ const Stations = () => {
             <button
               type="submit"
               className="bg-[#44dba0] text-white rounded-md px-4 py-2 mr-2"
+              onClick={() =>
+                getDirections(
+                  { latitude: 37.7937, longitude: -122.3965 },
+                  {
+                    latitude: station?.location?.latitude,
+                    longitude: station?.location?.longitude,
+                  }
+                )
+              }
             >
               Get Directions
             </button>
