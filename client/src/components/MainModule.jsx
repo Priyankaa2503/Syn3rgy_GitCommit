@@ -9,8 +9,6 @@ import {
 import Icons from "./Icons";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
-import axios from "axios";
-
 const MainModule = ({ data, user, setUser, active, setIsLoggedIn }) => {
   const getSection = () => {
     switch (active) {
