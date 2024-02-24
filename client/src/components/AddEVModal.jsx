@@ -1,6 +1,8 @@
+import axios from "axios";
 import React, { useState } from "react";
+import toast from "react-hot-toast";
 
-const AddEVModal = ({ isOpen, onClose }) => {
+const AddEVModal = ({ isOpen, getData, onClose }) => {
   const [formData, setFormData] = useState({
     evName: "",
     evModel: "",
@@ -23,7 +25,24 @@ const AddEVModal = ({ isOpen, onClose }) => {
     e.preventDefault();
     // Here you can handle submitting the form data
     console.log(formData);
-    // Reset form data after submission
+    axios
+      .patch("http://localhost:5000/user/1", {
+        evName: formData.evName,
+        evModel: formData.evModel,
+        evYear: parseInt(formData.evYear),
+        evBatteryCapacity: parseInt(formData.evBatteryCapacity),
+        evRange: parseInt(formData.evRange),
+        evPowerReserve: parseInt(formData.evPowerReserve),
+        evChargingConnector: formData.evChargingConnector,
+      })
+      .then((res) => {
+        toast.success("EV added successfully");
+        getData();
+      })
+      .catch((err) => {
+        toast.error("Failed to add EV");
+      });
+
     setFormData({
       evName: "",
       evModel: "",
