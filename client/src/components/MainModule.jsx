@@ -11,11 +11,11 @@ import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import axios from "axios";
 
-const MainModule = ({ user, setUser, active, setIsLoggedIn }) => {
+const MainModule = ({ data, user, setUser, active, setIsLoggedIn }) => {
   const getSection = () => {
     switch (active) {
       case "Dashboard":
-        return <Dashboard />;
+        return <Dashboard data={data} />;
       case "Account":
         return <Account />;
       case "Stations":
@@ -24,8 +24,6 @@ const MainModule = ({ user, setUser, active, setIsLoggedIn }) => {
         return <MyTrips />;
       case "Subscription Plan":
         return <SubscriptionPlan />;
-      default:
-        return <Dashboard />;
     }
   };
 
@@ -43,23 +41,6 @@ const MainModule = ({ user, setUser, active, setIsLoggedIn }) => {
 
   const [showModal, setShowModal] = useState(false);
   const navigate = useNavigate();
-
-  const [data, setData] = useState(null);
-
-  useEffect(() => {
-    const userId = JSON.parse(localStorage.getItem("user"))?.id;
-    if (user && localStorage.getItem("user")) {
-      axios
-        .get(`http://localhost:5000/user/${userId}`)
-        .then((res) => {
-          setData(res.data);
-          console.log(res.data);
-        })
-        .catch((err) => {
-          toast.error("Error fetching user data");
-        });
-    }
-  }, [user]);
 
   return (
     <div className="w-full h-screen flex flex-col items-center justify-center p-5 gap-4">

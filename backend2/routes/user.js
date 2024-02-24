@@ -23,17 +23,19 @@ router.patch("/:id", async (req, res) => {
     evYear,
     evBatteryCapacity,
     evRange,
+    evPowerReserve,
     evChargingConnector,
   } = req.body;
 
   const result = await db.query(
-    "UPDATE users SET evName = ?, evModel = ?, evYear = ?, evBatteryCapacity = ?, evRange = ?, evChargingConnector = ? WHERE id = ?",
+    "UPDATE users SET evName = ?, evModel = ?, evYear = ?, evBatteryCapacity = ?, evRange = ?, evPowerReserve = ?, evChargingConnector = ? WHERE id = ?",
     [
       evName,
       evModel,
       evYear,
       evBatteryCapacity,
       evRange,
+      evPowerReserve,
       evChargingConnector,
       userId,
     ]
