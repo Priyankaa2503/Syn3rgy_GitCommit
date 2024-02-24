@@ -1,158 +1,151 @@
-import React, { useState } from "react";
+import {
+  Box,
+  Button,
+  ButtonGroup,
+  Flex,
+  HStack,
+  IconButton,
+  Input,
+  SkeletonText,
+  Text,
+} from "@chakra-ui/react";
+import { FaLocationArrow, FaTimes } from "react-icons/fa";
 
-const MyTrips = () => {
-  const [evcar, setEvcar] = useState({
-    car: "Nissan",
-    speed: 350,
-    parking: "free",
-    chargers: 4,
-    cost: "0.59",
-    plugs: "ccs",
+import {
+  useJsApiLoader,
+  GoogleMap,
+  Marker,
+  Autocomplete,
+  DirectionsRenderer,
+} from "@react-google-maps/api";
+import { useRef, useState } from "react";
+
+const center = { lat: 48.8584, lng: 2.2945 };
+
+function MyTrips() {
+  const { isLoaded } = useJsApiLoader({
+    googleMapsApiKey: "AIzaSyAGHFR3hfwbf_yGyfkPFZ7aSfj7Jr7RDfg",
+    libraries: ["places"],
   });
+
+  const [map, setMap] = useState(null);
+  const [directionsResponse, setDirectionsResponse] = useState(null);
+  const [distance, setDistance] = useState("");
+  const [duration, setDuration] = useState("");
+  const originRef = useRef(null);
+  const destinationRef = useRef(null);
+
+  async function calculateRoute() {
+    if (!isLoaded) return; // Check if Google Maps API is loaded
+    if (!originRef.current || !destinationRef.current) return;
+
+    const directionsService = new google.maps.DirectionsService();
+    const results = await directionsService.route({
+      origin: originRef.current.value,
+      destination: destinationRef.current.value,
+      travelMode: google.maps.TravelMode.DRIVING,
+    });
+    setDirectionsResponse(results);
+    setDistance(results.routes[0].legs[0].distance.text);
+    setDuration(results.routes[0].legs[0].duration.text);
+  }
+
+  function clearRoute() {
+    setDirectionsResponse(null);
+    setDistance("");
+    setDuration("");
+    originRef.current.value = "";
+    destinationRef.current.value = "";
+  }
+
   return (
-    <>
-      <div className="py-10 container mx-auto px-32">
-        <div className="relative">
-          <div
-            className="border-r-4 border-gray-400 absolute h-full top-0"
-            style={{ left: "9px" }}
-          ></div>
-          <ul className="list-none m-0 p-0">
-            <li className="mb-5  ">
-              <div className="flex group items-center max-w-[80%]">
-                <div className="bg-[#44DDA0] group-hover:bg-red-700 z-10 rounded-full border-4 border-black  h-5 w-5">
-                  <div className="bg-black h-1 w-6 items-center  ml-4 mt-1"></div>
-                </div>
-                <div className="flex-1 ml-4 z-10 font-medium">
-                  <div className="order-1 space-y-2  rounded-lg shadow-only transition-ease  px-6 py-4">
-                    <h3 className="mb-3 font-bold text-white text-2xl">
-                      Tesla Station
-                    </h3>
-                    <p className="pb-4 text-sm text-gray-100">
-                      1780 N Beale Rd, Marysville
-                    </p>
-                    <hr />
-                    <div className="text-sm font-medium leading-snug tracking-wide text-gray-300 text-opacity-100">
-                      <div className="w-full text-[#575757] mt-5 grid grid-cols-3 gap-3 justify-start items-center">
-                        <div className="flex  justify-start flex-col">
-                          <div className="items-center mr-2">
-                            Charging Speed
-                          </div>
-                          <div className="flex gap-1 items-center">
-                            <span className="text-xl text-white">
-                              {evcar.speed}
-                            </span>
-                            {" kW"}
-                          </div>
-                        </div>
-                        <div className="flex justify-start flex-col">
-                          <div className="items-center mr-2">Parking</div>
-                          <div className="flex gap-1 items-center">
-                            <span className="text-xl text-white">
-                              {evcar.parking}
-                            </span>
-                          </div>
-                        </div>
-                        <div className="flex justify-start flex-col">
-                          <div className="items-center mr-2">Chargers</div>
-                          <div className="flex gap-1 items-center">
-                            <span className="text-xl text-white">
-                              {evcar.chargers}
-                            </span>
-                          </div>
-                        </div>
-                        <div className="flex justify-start flex-col">
-                          <div className="items-center mr-2">Cost</div>
-                          <div className="flex gap-1 items-center">
-                            <span className="text-xl text-white">
-                              {evcar.cost}
-                            </span>
-                          </div>
-                        </div>
-                        <div className="flex justify-start flex-col">
-                          <div className="items-center mr-2">Plugs</div>
-                          <div className="flex gap-1 items-center">
-                            <span className="text-xl text-white">
-                              {evcar.plugs}
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </li>
-            <li className="mb-5  ">
-              <div className="flex group items-center max-w-[80%]">
-                <div className="bg-[#44DDA0] group-hover:bg-red-700 z-10 rounded-full border-4 border-black  h-5 w-5">
-                  <div className="bg-black h-1 w-6 items-center  ml-4 mt-1"></div>
-                </div>
-                <div className="flex-1 ml-4 z-10 font-medium">
-                  <div className="order-1 space-y-2  rounded-lg shadow-only transition-ease  px-6 py-4">
-                    <h3 className="mb-3 font-bold text-white text-2xl">
-                      Tesla Station
-                    </h3>
-                    <p className="pb-4 text-sm text-gray-100">
-                      1780 N Beale Rd, Marysville
-                    </p>
-                    <hr />
-                    <div className="text-sm font-medium leading-snug tracking-wide text-gray-300 text-opacity-100">
-                      <div className="w-full text-[#575757] mt-5 grid grid-cols-3 gap-3 justify-start items-center">
-                        <div className="flex  justify-start flex-col">
-                          <div className="items-center mr-2">
-                            Charging Speed
-                          </div>
-                          <div className="flex gap-1 items-center">
-                            <span className="text-xl text-white">
-                              {evcar.speed}
-                            </span>
-                            {" kW"}
-                          </div>
-                        </div>
-                        <div className="flex justify-start flex-col">
-                          <div className="items-center mr-2">Parking</div>
-                          <div className="flex gap-1 items-center">
-                            <span className="text-xl text-white">
-                              {evcar.parking}
-                            </span>
-                          </div>
-                        </div>
-                        <div className="flex justify-start flex-col">
-                          <div className="items-center mr-2">Chargers</div>
-                          <div className="flex gap-1 items-center">
-                            <span className="text-xl text-white">
-                              {evcar.chargers}
-                            </span>
-                          </div>
-                        </div>
-                        <div className="flex justify-start flex-col">
-                          <div className="items-center mr-2">Cost</div>
-                          <div className="flex gap-1 items-center">
-                            <span className="text-xl text-white">
-                              {evcar.cost}
-                            </span>
-                          </div>
-                        </div>
-                        <div className="flex justify-start flex-col">
-                          <div className="items-center mr-2">Plugs</div>
-                          <div className="flex gap-1 items-center">
-                            <span className="text-xl text-white">
-                              {evcar.plugs}
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </>
+    <Flex
+      position="relative"
+      flexDirection="column"
+      alignItems="center"
+      h="100vh"
+      // w="100vw"
+    >
+      {isLoaded && (
+        <Box position="absolute" left={0} top={0} h="100%" w="100%">
+          {/* Google Map Box */}
+          <GoogleMap
+            center={center}
+            zoom={15}
+            mapContainerStyle={{ width: "100%", height: "100%" }}
+            options={{
+              zoomControl: false,
+              streetViewControl: false,
+              mapTypeControl: false,
+              fullscreenControl: false,
+            }}
+            onLoad={(map) => setMap(map)}
+          >
+            <Marker position={center} />
+            {directionsResponse && (
+              <DirectionsRenderer directions={directionsResponse} />
+            )}
+          </GoogleMap>
+        </Box>
+      )}
+      <Box
+        p={4}
+        borderRadius="lg"
+        m={4}
+        bgColor="white"
+        shadow="base"
+        minW="container.md"
+        zIndex="1"
+      >
+        <HStack spacing={2} justifyContent="space-between">
+          <Box flexGrow={1}>
+            <Autocomplete>
+              <Input
+                type="text"
+                placeholder="Origin"
+                ref={originRef}
+                className="text-black"
+              />
+            </Autocomplete>
+          </Box>
+          <Box flexGrow={1}>
+            <Autocomplete>
+              <Input
+                type="text"
+                placeholder="Destination"
+                ref={destinationRef}
+                className="text-black"
+              />
+            </Autocomplete>
+          </Box>
+
+          <ButtonGroup>
+            <Button colorScheme="pink" type="submit" onClick={calculateRoute}>
+              Calculate Route
+            </Button>
+            <IconButton
+              aria-label="center back"
+              icon={<FaTimes />}
+              onClick={clearRoute}
+            />
+          </ButtonGroup>
+        </HStack>
+        <HStack spacing={4} mt={4} justifyContent="space-between">
+          <Text>Distance: {distance} </Text>
+          <Text>Duration: {duration} </Text>
+          <IconButton
+            aria-label="center back"
+            icon={<FaLocationArrow />}
+            isRound
+            onClick={() => {
+              map.panTo(center);
+              map.setZoom(15);
+            }}
+          />
+        </HStack>
+      </Box>
+    </Flex>
   );
-};
+}
 
 export default MyTrips;
