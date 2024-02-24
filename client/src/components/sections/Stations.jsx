@@ -195,36 +195,42 @@ const Stations = () => {
   };
 
   return (
-    <div>
-      <div style={{ position: "relative" }}>
-        <div id="map" style={{ height: "900px", width: "100%" }}></div>
+    <div className="w-full h-full">
+      <div
+        className="h-full rounded-lg overflow-hidden"
+        style={{ position: "relative" }}
+      >
+        <div id="map" style={{ height: "100%", width: "100%" }}></div>
+        {estimatedDistance && estimatedTime && (
+          <div
+            style={{
+              position: "absolute",
+              top: 36,
+              right: 12,
+              overflow: "auto",
+              color: "black",
+              backgroundColor: "rgba(0,0,0)",
+            }}
+            className="rounded-xl p-4 "
+          >
+            <p className="text-white">
+              Estimated Time:{" "}
+              <span className="text-[#44dba0]">{estimatedTime}</span>
+            </p>
+            <p className="text-white">
+              Estimated Distance:{" "}
+              <span className="text-[#44dba0]">{estimatedDistance}</span>
+            </p>
+          </div>
+        )}
         <div
-          style={{
-            position: "absolute",
-            top: 36,
-            right: 12,
-            overflow: "auto",
-            color: "black",
-            backgroundColor: "rgba(0,0,0)",
-          }}
-          className="rounded-xl p-4 "
-        >
-          <p className="text-white">
-            Estimated Time:{" "}
-            <span className="text-[#44dba0]">{estimatedTime}</span>
-          </p>
-          <p className="text-white">
-            Estimated Distance:{" "}
-            <span className="text-[#44dba0]">{estimatedDistance}</span>
-          </p>
-        </div>
-        <div
+          className="h-full overflow-y-auto"
           style={{
             position: "absolute",
             top: 0,
             left: 0,
             width: "33.33%",
-            height: "900px",
+            // height: "900px",
             overflow: "auto",
             color: "black",
             backgroundColor: "rgba(255, 255, 255, 0.8)",
