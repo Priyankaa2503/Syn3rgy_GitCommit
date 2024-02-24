@@ -24,6 +24,7 @@ const Stations = () => {
   let map;
   const [stations, setStations] = useState([]);
   const [estimatedTime, setEstimatedTime] = useState("");
+  const [estimatedTimeInTraffic, setEstimatedTimeInTraffic] = useState("");
   const [estimatedDistance, setEstimatedDistance] = useState("");
   const [filteredStations, setFilteredStations] = useState([]);
   const [selectedFilters, setSelectedFilters] = useState([]);
@@ -172,20 +173,33 @@ const Stations = () => {
     );
 
     // Configure directions request
+    // const request = {
+    //   origin: originLatLng,
+    //   destination: destinationLatLng,
+    //   travelMode: google.maps.TravelMode.DRIVING,
+    // };
+
+    const trafficLayer = new google.maps.TrafficLayer();
+    trafficLayer.setMap(map);
     const request = {
       origin: originLatLng,
       destination: destinationLatLng,
       travelMode: google.maps.TravelMode.DRIVING,
+      drivingOptions: {
+        departureTime: new Date(), // for the current time
+        trafficModel: "pessimistic",
+      },
     };
 
     // Request directions
     directionsService.route(request, (response, status) => {
       if (status === google.maps.DirectionsStatus.OK) {
-        // Display the route on the map
         const route = response.routes[0];
+        const estimatedTimeInTraffic = route.legs[0].duration_in_traffic.text;
         const estimatedTime = route.legs[0].duration.text;
         const estimatedDistance = route.legs[0].distance.text;
         setEstimatedTime(estimatedTime);
+        setEstimatedTimeInTraffic(estimatedTimeInTraffic);
         setEstimatedDistance(estimatedDistance);
         directionsRenderer.setDirections(response);
       } else {
@@ -195,36 +209,46 @@ const Stations = () => {
   };
 
   return (
-    <div>
-      <div style={{ position: "relative" }}>
-        <div id="map" style={{ height: "900px", width: "100%" }}></div>
+    <div className="w-full h-full">
+      <div
+        className="h-full rounded-lg overflow-hidden"
+        style={{ position: "relative" }}
+      >
+        <div id="map" style={{ height: "100%", width: "100%" }}></div>
+        {estimatedDistance && estimatedTime && estimatedTimeInTraffic && (
+          <div
+            style={{
+              position: "absolute",
+              top: 36,
+              right: 12,
+              overflow: "auto",
+              color: "black",
+              backgroundColor: "rgba(0,0,0)",
+            }}
+            className="rounded-xl p-4 "
+          >
+            <p className="text-white">
+              Estimated Time:{" "}
+              <span className="text-[#44dba0]">{estimatedTime}</span>
+            </p>
+            <p className="text-white">
+              Estimated Time in Traffic:{" "}
+              <span className="text-[#44dba0]">{estimatedTimeInTraffic}</span>
+            </p>
+            <p className="text-white">
+              Estimated Distance:{" "}
+              <span className="text-[#44dba0]">{estimatedDistance}</span>
+            </p>
+          </div>
+        )}
         <div
-          style={{
-            position: "absolute",
-            top: 36,
-            right: 12,
-            overflow: "auto",
-            color: "black",
-            backgroundColor: "rgba(0,0,0)",
-          }}
-          className="rounded-xl p-4 "
-        >
-          <p className="text-white">
-            Estimated Time:{" "}
-            <span className="text-[#44dba0]">{estimatedTime}</span>
-          </p>
-          <p className="text-white">
-            Estimated Distance:{" "}
-            <span className="text-[#44dba0]">{estimatedDistance}</span>
-          </p>
-        </div>
-        <div
+          className="h-full overflow-y-auto"
           style={{
             position: "absolute",
             top: 0,
             left: 0,
             width: "33.33%",
-            height: "900px",
+            // height: "900px",
             overflow: "auto",
             color: "black",
             backgroundColor: "rgba(255, 255, 255, 0.8)",
