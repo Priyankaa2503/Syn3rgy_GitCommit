@@ -8,6 +8,14 @@ const AuthModule = ({ setIsLoggedIn, setUser }) => {
   const [authType, setAuthType] = useState("login");
   const navigate = useNavigate();
 
+  useEffect(() => {
+    if (localStorage.getItem("user")) {
+      setIsLoggedIn(true);
+      setUser(JSON.parse(localStorage.getItem("user")));
+      navigate("/");
+    }
+  }, []);
+  
   return (
     <div className="h-full w-full p-5 justify-center items-center flex">
       <div className="w-full h-full rounded-xl overflow-hidden flex bg-[#141414]">

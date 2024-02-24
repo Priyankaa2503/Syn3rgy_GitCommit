@@ -17,8 +17,8 @@ const Stations = () => {
     price: 60,
     status: "Good",
   });
-  const [map, setMap] = useState(null);
-  const [places, setPlaces] = useState([]); // Add this line
+  let map; 
+   const [places, setPlaces] = useState([]); // Add this line
   useEffect(() => {
     // Load the Google Maps script
     const script = document.createElement("script");
@@ -27,6 +27,7 @@ const Stations = () => {
     script.defer = true;
     script.onload = () => {
       initMap();
+      // addMarker();
       getNearbyStations({ latitude: 37.7937, longitude: -122.3965 }, map);
     };
     document.head.appendChild(script);
@@ -36,23 +37,34 @@ const Stations = () => {
       document.head.removeChild(script);
     };
   }, []);
+
+
   function initMap() {
-    const map = new google.maps.Map(document.getElementById("map"), {
-      zoom: 13,
+     map = new google.maps.Map(document.getElementById("map"), {
+      zoom: 16,
       center: { lat: 37.7937, lng: -122.3965 },
     });
 
     new google.maps.Circle({
-      strokeColor: "#FF0000",
-      strokeOpacity: 0.8,
+      strokeColor: "#44DDA0",
+      strokeOpacity: 0.2,
       strokeWeight: 2,
-      fillColor: "#FF0000",
+      fillColor: "#44DDA0",
       fillOpacity: 0.35,
       map,
       center: { lat: 37.7937, lng: -122.3965 },
       radius: 500,
     });
+     
   }
+
+ function addMarker (coords)  {  
+    console.log("Adding marker at:", coords);
+   var marker = new google.maps.Marker({
+     position: coords,
+     map: map,
+   });
+  };
 
   const getNearbyStations = (userLocation, map) => {
     const url = "https://places.googleapis.com/v1/places:searchNearby";
@@ -85,28 +97,7 @@ const Stations = () => {
       .then((data) => {
         console.log("API Response:", data);
         data.places.forEach((place) => {
-          console.log(
-            "Latitude:",
-            place.location.latitude,
-            "Longitude:",
-            place.location.longitude
-          );
-          const myLatlng = new google.maps.LatLng(
-            place.location.latitude,
-            place.location.longitude
-          );
-          const marker = new google.maps.Marker({
-            position: myLatlng,
-            title: place.name,
-          });
-
-          const infoWindow = new window.google.maps.InfoWindow({
-            content: `<h2>${place.name}</h2><p>${place.formattedAddress}</p>`,
-          });
-
-          marker.addListener("click", () => {
-            infoWindow.open(map, marker);
-          });
+          addMarker({ lat: place.location.latitude, lng: place.location.longitude });
         });
       })
       .catch((error) => {
@@ -119,26 +110,6 @@ const Stations = () => {
       <div className="p-6 rounded-lg">
         <div id="map" style={{ height: "400px", width: "100%" }}></div>
       </div>
-      {/* {places.map(
-        (
-          place // Render the places data
-        ) => (
-          <div className="text-white">
-            <h2>{place.displayName.text}</h2>
-            <p>{place.formattedAddress}</p>
-            <p>Rating: {place.rating}</p>
-            <p>Phone: {place.internationalPhoneNumber}</p>
-            <p>
-              Website: <a href={place.websiteUri}>{place.websiteUri}</a>
-            </p>
-            <p>
-              Accessibility:{" "}
-              {place.accessibilityOptions.wheelchairAccessibleParking
-                ? "Wheelchair Accessible Parking"
-                : "No Wheelchair Accessible Parking"}
-            </p>
-            <p>Business Status: {place.businessStatus}</p>
-            {/* Add more fields as needed */}
       <div className="flex gap-x-24 justify-center">
         <div className="flex flex-col gap-y-6">
           <div className="border p-6 border-[#44DDA0] rounded-xl ">
@@ -191,7 +162,7 @@ const Stations = () => {
                   </div>
                 </div>
               </div>
-              <div className="border p-6 border- rounded-xl ">
+              {/* <div className="border p-6 border- rounded-xl ">
                 <MdOutlineElectricBolt className="font-extrabold text-4xl text-[#44DDA0]" />
                 <div className="flex justify-between my-4">
                   <h2 className="font-bold text-xl">
@@ -218,7 +189,7 @@ const Stations = () => {
                     <p className="font-bold text-white text-2xl">5</p>
                   </div>
                 </div>
-              </div>
+              </div> */}
             </div>
             <div className="">
               <p className="text-lg font-medium text-white ml-6 ">

@@ -19,7 +19,12 @@ const App = () => {
             element={
               <div className="w-full h-full overflow-hidden flex items-center justify-center">
                 <Sidebar active={active} setActive={setActive} />
-                <MainModule user={user} active={active} setActive={setActive} />
+                <MainModule
+                  user={user}
+                  setUser={setUser}
+                  active={active}
+                  setIsLoggedIn={setIsLoggedIn}
+                />
               </div>
             }
           />

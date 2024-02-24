@@ -3,6 +3,7 @@ import Icons from "../Icons";
 import Button from "./Button";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import axios from "axios";
 
 const Login = ({ setAuthType, setUser }) => {
   const [isActive, setIsActive] = useState("");
@@ -36,6 +37,17 @@ const Login = ({ setAuthType, setUser }) => {
     if (!email || !password) {
       return toast.error("Please fill all the fields");
     }
+    axios
+      .post("http://localhost:5000/auth/login", { email, password })
+      .then((res) => {
+        setUser(res.data);
+        localStorage.setItem("user", JSON.stringify(res.data));
+        toast.success("Logged in successfully");
+        navigate("/");
+      })
+      .catch((err) => {
+        toast.error("Invalid credentials");
+      });
   };
 
   return (
