@@ -54,7 +54,7 @@ const Register = ({ setAuthType, setUser }) => {
       <div className="w-full mt-5 text-gray-400 px-8 text-sm">
         If you already have an account
       </div>
-      <div className="w-full mt-1 text-sm px-8 font-semibold text-[#0C21C1]">
+      <div className="w-full mt-1 text-sm px-8 font-semibold text-[#44DDA0]">
         <div
           className="cursor-pointer hover:underline w-fit"
           onClick={() => {
@@ -68,7 +68,7 @@ const Register = ({ setAuthType, setUser }) => {
         <div className="text-xs text-gray-400 w-full px-4">Name</div>
         <div
           className={`w-full h-full transition-all duration-200 border-b-2 flex gap-2 py-2 rounded-lg ${
-            isActive === "name" ? "border-[#0C21C1]" : "border-gray-100"
+            isActive === "name" ? "border-[#44DDA0]" : "border-gray-100"
           }`}
           onClick={() => {
             setIsActive("name");
@@ -80,13 +80,13 @@ const Register = ({ setAuthType, setUser }) => {
               name="name"
               width="20"
               height="20"
-              color={isActive === "name" ? "#0C21C1" : "#676767"}
+              color={isActive === "name" ? "#44DDA0" : "#676767"}
             />
           </div>
           <input
             type="text"
             placeholder="Enter your name"
-            className="w-full overflow-hidden focus:outline-none"
+            className="w-full bg-transparent text-white overflow-hidden focus:outline-none"
             onChange={(e) => setName(e.target.value)}
           />
         </div>
@@ -95,7 +95,7 @@ const Register = ({ setAuthType, setUser }) => {
         <div className="text-xs text-gray-400 w-full px-4">Email</div>
         <div
           className={`w-full h-full transition-all duration-200 border-b-2 flex gap-2 py-2 rounded-lg ${
-            isActive === "email" ? "border-[#0C21C1]" : "border-gray-100"
+            isActive === "email" ? "border-[#44DDA0]" : "border-gray-100"
           }`}
           onClick={() => {
             setIsActive("email");
@@ -107,13 +107,13 @@ const Register = ({ setAuthType, setUser }) => {
               name="email"
               width="20"
               height="20"
-              color={isActive === "email" ? "#0C21C1" : "#676767"}
+              color={isActive === "email" ? "#44DDA0" : "#676767"}
             />
           </div>
           <input
             type="email"
             placeholder="Enter your email"
-            className="w-full overflow-hidden focus:outline-none"
+            className="w-full bg-transparent text-white overflow-hidden focus:outline-none"
             onChange={(e) => setEmail(e.target.value)}
           />
         </div>
@@ -122,7 +122,7 @@ const Register = ({ setAuthType, setUser }) => {
         <div className="text-xs text-gray-400 w-full px-4">Password</div>
         <div
           className={`w-full h-full transition-all duration-200 border-b-2 flex gap-2 py-2 rounded-lg ${
-            isActive === "password" ? "border-[#0C21C1]" : "border-gray-100"
+            isActive === "password" ? "border-[#44DDA0]" : "border-gray-100"
           }`}
           onClick={() => {
             setIsActive("password");
@@ -134,13 +134,13 @@ const Register = ({ setAuthType, setUser }) => {
               name="password"
               width="20"
               height="20"
-              color={isActive === "password" ? "#0C21C1" : "#676767"}
+              color={isActive === "password" ? "#44DDA0" : "#676767"}
             />
           </div>
           <input
             type="password"
             placeholder="Password"
-            className="w-full overflow-hidden focus:outline-none"
+            className="w-full bg-transparent text-white overflow-hidden focus:outline-none"
             onChange={(e) => setPassword(e.target.value)}
           />
         </div>
@@ -149,7 +149,7 @@ const Register = ({ setAuthType, setUser }) => {
         <div className="text-xs text-gray-400 w-full px-4">Re-Password</div>
         <div
           className={`w-full h-full transition-all duration-200 border-b-2 flex gap-2 py-2 rounded-lg ${
-            isActive === "repassword" ? "border-[#0C21C1]" : "border-gray-100"
+            isActive === "repassword" ? "border-[#44DDA0]" : "border-gray-100"
           }`}
           onClick={() => {
             setIsActive("repassword");
@@ -161,13 +161,13 @@ const Register = ({ setAuthType, setUser }) => {
               name="password"
               width="20"
               height="20"
-              color={isActive === "repassword" ? "#0C21C1" : "#676767"}
+              color={isActive === "repassword" ? "#44DDA0" : "#676767"}
             />
           </div>
           <input
             type="password"
             placeholder="Re-enter your password"
-            className="w-full overflow-hidden focus:outline-none"
+            className="w-full bg-transparent text-white overflow-hidden focus:outline-none"
             onChange={(e) => setRePassword(e.target.value)}
           />
         </div>

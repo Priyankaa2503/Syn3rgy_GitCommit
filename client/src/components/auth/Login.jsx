@@ -78,7 +78,7 @@ const Login = ({ setAuthType, setUser }) => {
           <input
             type="email"
             placeholder="Enter your email"
-            className="w-full overflow-hidden focus:outline-none"
+            className="w-full bg-transparent text-white overflow-hidden focus:outline-none"
             onChange={(e) => setEmail(e.target.value)}
           />
         </div>
@@ -105,7 +105,7 @@ const Login = ({ setAuthType, setUser }) => {
           <input
             type="password"
             placeholder="Enter your password"
-            className="w-full overflow-hidden focus:outline-none"
+            className="w-full bg-transparent text-white overflow-hidden focus:outline-none"
             onChange={(e) => setPassword(e.target.value)}
           />
         </div>
