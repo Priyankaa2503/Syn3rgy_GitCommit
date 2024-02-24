@@ -23,7 +23,7 @@ db.connect((err) => {
       resetPasswordToken VARCHAR(255),
       resetPasswordExpires DATETIME,
       isAdmin BOOLEAN DEFAULT FALSE,
-      evMake VARCHAR(100),
+      evName VARCHAR(100),
       evModel VARCHAR(100),
       evYear INT,
       evBatteryCapacity DECIMAL,

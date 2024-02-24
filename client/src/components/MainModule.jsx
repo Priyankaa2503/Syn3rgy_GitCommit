@@ -9,6 +9,7 @@ import {
 import Icons from "./Icons";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import axios from "axios";
 
 const MainModule = ({ user, setUser, active, setIsLoggedIn }) => {
   const getSection = () => {
@@ -28,20 +29,37 @@ const MainModule = ({ user, setUser, active, setIsLoggedIn }) => {
     }
   };
 
-  useEffect(() => {
-    if (!localStorage.getItem("user")) {
-      setIsLoggedIn(true);
-      setUser(JSON.parse(localStorage.getItem("user")));
-      navigate("/auth");
-    } else {
-      if (user === null) {
-        setUser(JSON.parse(localStorage.getItem("user")));
-      }
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (!localStorage.getItem("user")) {
+  //     setIsLoggedIn(true);
+  //     setUser(JSON.parse(localStorage.getItem("user")));
+  //     navigate("/auth");
+  //   } else {
+  //     if (user === null) {
+  //       setUser(JSON.parse(localStorage.getItem("user")));
+  //     }
+  //   }
+  // }, []);
 
   const [showModal, setShowModal] = useState(false);
   const navigate = useNavigate();
+
+  const [data, setData] = useState(null);
+
+  useEffect(() => {
+    const userId = JSON.parse(localStorage.getItem("user"))?.id;
+    if (user && localStorage.getItem("user")) {
+      axios
+        .get(`http://localhost:5000/user/${userId}`)
+        .then((res) => {
+          setData(res.data);
+          console.log(res.data);
+        })
+        .catch((err) => {
+          toast.error("Error fetching user data");
+        });
+    }
+  }, [user]);
 
   return (
     <div className="w-full h-screen flex flex-col items-center justify-center p-5 gap-4">
