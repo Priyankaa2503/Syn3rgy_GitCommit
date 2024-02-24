@@ -203,8 +203,6 @@ const Stations = () => {
             position: "absolute",
             top: 36,
             right: 12,
-            // width: "33.33%",
-            // height: "",
             overflow: "auto",
             color: "black",
             backgroundColor: "rgba(0,0,0)",

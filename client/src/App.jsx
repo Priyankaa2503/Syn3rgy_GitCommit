@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import AuthModule from "./components/auth/AuthModule";
 import axios from "axios";
 import toast from "react-hot-toast";
+import { ChakraProvider } from "@chakra-ui/react";
 
 const App = () => {
   const [active, setActive] = useState("Dashboard");
@@ -51,6 +52,7 @@ const App = () => {
   }, []);
 
   return (
+    <ChakraProvider>
     <div className="h-screen w-screen overflow-hidden flex items-center justify-center bg-[#0F0F0F] text-white font-pops">
       <Router>
         <Routes>
@@ -83,6 +85,7 @@ const App = () => {
         </Routes>
       </Router>
     </div>
+    </ChakraProvider>
   );
 };
 
