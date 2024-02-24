@@ -9,12 +9,13 @@ import {
 import Icons from "./Icons";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import axios from "axios";
 
-const MainModule = ({ user, setUser, active, setIsLoggedIn }) => {
+const MainModule = ({ data, user, setUser, active, setIsLoggedIn }) => {
   const getSection = () => {
     switch (active) {
       case "Dashboard":
-        return <Dashboard />;
+        return <Dashboard data={data} />;
       case "Account":
         return <Account />;
       case "Stations":
@@ -23,22 +24,20 @@ const MainModule = ({ user, setUser, active, setIsLoggedIn }) => {
         return <MyTrips />;
       case "Subscription Plan":
         return <SubscriptionPlan />;
-      default:
-        return <Dashboard />;
     }
   };
 
-  useEffect(() => {
-    if (!localStorage.getItem("user")) {
-      setIsLoggedIn(true);
-      setUser(JSON.parse(localStorage.getItem("user")));
-      navigate("/auth");
-    } else {
-      if (user === null) {
-        setUser(JSON.parse(localStorage.getItem("user")));
-      }
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (!localStorage.getItem("user")) {
+  //     setIsLoggedIn(true);
+  //     setUser(JSON.parse(localStorage.getItem("user")));
+  //     navigate("/auth");
+  //   } else {
+  //     if (user === null) {
+  //       setUser(JSON.parse(localStorage.getItem("user")));
+  //     }
+  //   }
+  // }, []);
 
   const [showModal, setShowModal] = useState(false);
   const navigate = useNavigate();

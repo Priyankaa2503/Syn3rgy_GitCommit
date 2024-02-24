@@ -32,7 +32,7 @@ const ProgressBar = ({ title, value, max, gasEqual }) => {
   );
 };
 
-const Dashboard = () => {
+const Dashboard = ({ data }) => {
   const [evcar, setEvcar] = useState({
     car: "Nissan",
     battery: 40,
@@ -203,14 +203,14 @@ const Dashboard = () => {
               }`}
               onClick={() => {
                 setEvcar({
-                  car: "Tesla",
-                  battery: 23,
+                  car: data?.evName,
+                  battery: data?.evBatteryCapacity,
                   time: "2:21",
-                  powerReserve: 100,
+                  powerReserve: data?.evPowerReserve,
                 });
               }}
             >
-              Tesla
+              {data?.evName}
             </div>
           </div>
         </div>
@@ -413,10 +413,6 @@ const Dashboard = () => {
           </div>
         </div>
         <StackedBar />
-        <div className="flex flex-col gap-2 w-full mt-5">
-          <ProgressBar title="CA$32" value={3} max={12} />
-          <ProgressBar title="CA$57" value={7} max={12} />
-        </div>
       </div>
       {/* Stations list */}
       <div className="w-full p-8 shadow-md shadow-[#00000040] rounded-xl bg-[#141414]">

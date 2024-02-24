@@ -52,7 +52,7 @@ const CarCard = ({ car, model, battery, range }) => {
   );
 }
 
-const Sidebar = ({ active, setActive }) => {
+const Sidebar = ({ data, active, setActive }) => {
   return (
     <div className="w-96 overflow-x-hidden relative bg-[#141414] overflow-y-auto h-full">
       <div className="text-2xl gap-2 py-16 w-full flex items-center justify-center">
@@ -78,7 +78,12 @@ const Sidebar = ({ active, setActive }) => {
           </div>
         </div>
         <CarCard car="Nissan" model="Model 3" battery={23} range="300 mi" />
-        <CarCard car="Tesla" model="Model X" battery={70} range="300 mi" />
+        <CarCard
+          car={data?.evName}
+          model={data?.evModel}
+          battery={data?.evBatteryCapacity}
+          range={data?.evRange}
+        />
       </div>
     </div>
   );
