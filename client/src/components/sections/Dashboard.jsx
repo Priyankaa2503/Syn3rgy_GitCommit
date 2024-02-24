@@ -421,38 +421,19 @@ const Dashboard = ({ data }) => {
       {/* Charge statistics */}
       <div className="w-full p-8 shadow-md shadow-[#00000040] rounded-xl bg-[#141414]">
         <div className="w-full items-center justify-between flex">
-          <div className="text-lg font-semibold">Charge statistics</div>
+          <div className="text-lg font-semibold">Monthly Charge Statistics</div>
           <div className="relative">
-            <div
+            {/* <div
               className="cursor-pointer"
               onClick={() => {
                 setChargeDropdown(true);
               }}
             >
               {charge}
-            </div>
-            {showChargeDropdown && (
-              <div className="w-32 bg-[#0F0F0F] absolute top-full right-0 shadow-md rounded-xl z-10">
-                <div
-                  className="w-full h-12 flex justify-center items-center cursor-pointer"
-                  onClick={() => {
-                    setCharge("Year");
-                    setChargeDropdown(false);
-                  }}
-                >
-                  Year
-                </div>
-                <div
-                  className="w-full h-12 flex justify-center items-center cursor-pointer"
-                  onClick={() => {
-                    setCharge("Month");
-                    setChargeDropdown(false);
-                  }}
-                >
-                  Month
-                </div>
-              </div>
-            )}
+            </div> */}
+            {/* {showChargeDropdown && ( */}
+             
+            {/* )} */}
           </div>
         </div>
         <div className="w-full text-[#575757] mt-5 grid gap-3 grid-cols-2 md:grid-cols-3 lg:flex justify-between items-center">
@@ -464,14 +445,14 @@ const Dashboard = ({ data }) => {
             </div>
           </div>
           <div className="flex flex-col">
-            <div>Total Charged`</div>
+            <div>Total Charged</div>
             <div className="flex gap-1 items-center">
               <span className="text-3xl text-white">324</span>
               {" kWh"}
             </div>
           </div>
           <div className="flex flex-col">
-            <div>Total Time`</div>
+            <div>Total Time</div>
             <div className="flex gap-1 items-center">
               <span className="text-3xl text-white">52</span>
               {" hr"}
@@ -484,18 +465,13 @@ const Dashboard = ({ data }) => {
             </div>
           </div>
           <div className="flex flex-col">
-            <div>parking Time</div>
+            <div>Parking Time</div>
             <div className="flex gap-1 items-center">
               <span className="text-3xl text-white">11</span>
               {" hr"}
             </div>
           </div>
-          <div className="flex flex-col">
-            <div>Cycle Count</div>
-            <div className="flex gap-1 items-center">
-              <span className="text-3xl text-white">651</span>
-            </div>
-          </div>
+         
         </div>
         <StackedBar />
       </div>
