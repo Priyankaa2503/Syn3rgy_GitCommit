@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import Icons from "./Icons";
 import Car from "../assets/Car.png";
+import AddEVModal from "./AddEVModal";
 
 const Link = ({ name, active, setActive }) => {
   return (
@@ -50,9 +51,18 @@ const CarCard = ({ car, model, battery, range }) => {
       </div>
     </div>
   );
-}
+};
 
 const Sidebar = ({ data, active, setActive }) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleOpenModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
   return (
     <div className="w-96 overflow-x-hidden relative bg-[#141414] overflow-y-auto h-full">
       <div className="text-2xl gap-2 py-16 w-full flex items-center justify-center">
@@ -73,7 +83,10 @@ const Sidebar = ({ data, active, setActive }) => {
       <div className="w-full p-5 flex flex-col gap-5">
         <div className="items-center w-full flex justify-between font-bold">
           <div>My Cars</div>
-          <div className="rounded-full cursor-pointer hover:bg-gray-50 hover:bg-opacity-15">
+          <div
+            className="rounded-full cursor-pointer hover:bg-gray-50 hover:bg-opacity-15"
+            onClick={handleOpenModal}
+          >
             <Icons name="add" width={20} height={20} color="white" />
           </div>
         </div>
@@ -84,6 +97,7 @@ const Sidebar = ({ data, active, setActive }) => {
           battery={data?.evBatteryCapacity}
           range={data?.evRange}
         />
+        <AddEVModal isOpen={isModalOpen} onClose={handleCloseModal} />
       </div>
     </div>
   );
