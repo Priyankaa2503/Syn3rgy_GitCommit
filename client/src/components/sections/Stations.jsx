@@ -7,6 +7,7 @@ import Line from "../../charts/Line";
 import { BsLightningChargeFill } from "react-icons/bs";
 import { RiGasStationFill } from "react-icons/ri";
 import { FaPhoneAlt } from "react-icons/fa";
+import { AiFillStar, AiOutlineStar } from "react-icons/ai";
 
 const Stations = () => {
   const [evcar, setEvcar] = useState({
@@ -28,6 +29,68 @@ const Stations = () => {
   const [estimatedDistance, setEstimatedDistance] = useState("");
   const [filteredStations, setFilteredStations] = useState([]);
   const [selectedFilters, setSelectedFilters] = useState([]);
+  const [reviews, setReviews] = useState([]);
+  const [newReview, setNewReview] = useState("");
+  const [rating, setRating] = useState(0);
+
+  useEffect(() => {
+    // Initialize reviews with sample data
+    setReviews([
+      {
+        text: "Great station!",
+        rating: 5,
+        timestamp: new Date().toISOString(),
+      },
+      {
+        text: "Good experience overall.",
+        rating: 4,
+        timestamp: new Date("2024-02-24T10:30:00").toISOString(),
+      },
+    ]);
+  }, []);
+
+  // Function to handle adding a new review
+  const addReview = () => {
+    if (newReview && rating) {
+      const newReviewObj = {
+        text: newReview,
+        rating: rating,
+        timestamp: new Date().toISOString(),
+      };
+      setReviews([...reviews, newReviewObj]);
+      // Reset the form
+      setNewReview("");
+      setRating(0);
+    }
+  };
+
+  // Function to render star icons based on rating
+  const renderStars = (numStars) => {
+    const stars = [];
+    for (let i = 1; i <= 5; i++) {
+      stars.push(
+        i <= numStars ? (
+          <AiFillStar
+            key={i}
+            className="text-yellow-400 cursor-pointer"
+            onClick={() => setRating(i)}
+          />
+        ) : (
+          <AiOutlineStar
+            key={i}
+            className="text-gray-400 cursor-pointer"
+            onClick={() => setRating(i)}
+          />
+        )
+      );
+    }
+    return <div className="flex">{stars}</div>;
+  };
+
+  // Sort reviews by timestamp in descending order
+  const sortedReviews = [...reviews].sort((a, b) =>
+    a.timestamp < b.timestamp ? 1 : -1
+  );
 
   useEffect(() => {
     // Load the Google Maps script
@@ -404,115 +467,53 @@ const Stations = () => {
           </div>
         </div>
         <div className="">
-          <p className="text-lg font-medium text-white ml-6 ">Vehicle Stats</p>
+          <p className="text-lg font-medium text-white ml-6 ">
+            About the EV Station
+          </p>
           <img src={Car} alt="" className="h-64" />
 
+          {/* Reviews And Ratings */}
           <div className="w-full text-[#575757] mt-5 flex  justify-between items-center">
-            <div className="flex flex-col">
-              <div>EV</div>
-              <div className="flex gap-1 items-center">
-                <span className="text-2xl text-white">{evcar.car}</span>
-              </div>
-            </div>
-            <div className="flex flex-col">
-              <div>Battery </div>
-              <div className="flex gap-1 items-center">
-                <span
-                  className={`text-2xl ${
-                    evcar.battery > 80 ? "text-[#44DDA0]" : "text-[#B23434]"
-                  }`}
-                >
-                  {evcar.battery}
-                </span>
-                {" %"}
-              </div>
-            </div>
-            <div className="flex flex-col">
-              <div>Range</div>
-              <div className="flex gap-1 items-center">
-                <span className="text-2xl text-white">{evcar.range}</span>
-                {" miles"}
-              </div>
-            </div>
-            <div className="flex flex-col">
-              <div>Temp</div>
-              <div className="flex gap-1 items-center">
-                <span className="text-2xl text-white">{evcar.temp}</span>
-                {" F"}
-              </div>
-            </div>
-          </div>
-          <div className="flex justify-between w-full p-6">
-            <div className=" text-[#575757] mt-5 flex flex-col justify-between ">
-              <div className="flex flex-col mt-2">
-                <div>EV</div>
-                <div className="flex gap-1 items-center">
-                  <span className="text-3xl text-white">{evcar.car}</span>
-                  {" h"}
+            <div className="flex flex-col mt-8">
+              {/* Form to input review */}
+              <div className="flex flex-col items-center justify-between mb-4">
+                <div className="flex">
+                  <input
+                    type="text"
+                    placeholder="Your review"
+                    value={newReview}
+                    onChange={(e) => setNewReview(e.target.value)}
+                    className="border border-gray-300 p-2 rounded-md w-72"
+                  />
+                  <div className="flex my-2 ml-2">{renderStars(rating)}</div>
                 </div>
-              </div>
-              <div className="flex flex-col mt-2">
-                <div>Battery Status</div>
-                <div className="flex gap-1 items-center">
-                  <span
-                    className={`text-3xl ${
-                      evcar.status === "Good"
-                        ? "text-[#44DDA0]"
-                        : "text-[#B23434]"
-                    }`}
-                  >
-                    {evcar.status}
-                  </span>
-                </div>
-              </div>
-              <div className="flex flex-col mt-2">
-                <div>Range</div>
-                <div className="flex gap-1 items-center">
-                  <span className="text-3xl text-white">{evcar.range}</span>
-                  {" miles"}
-                </div>
-              </div>
-              <div className="flex flex-col mt-2">
-                <div>Temp</div>
-                <div className="flex gap-1 items-center">
-                  <span className="text-3xl text-white">{evcar.temp}</span>
-                  {" F"}
-                </div>
-              </div>
-            </div>
-            <div className=" text-[#575757] mt-5 flex flex-col w-full text-right ">
-              <div className="flex flex-col py-4">
-                <div>Time left</div>
-                <div className="flex gap-1 items-center justify-end">
-                  <span className="text-3xl text-white">{evcar.time}</span>
-                  {" min"}
-                </div>
-              </div>
-              <div className="flex flex-col">
-                <div className="flex gap-1 items-center justify-end">
-                  <span
-                    className={`text-3xl ${
-                      evcar.battery > 50 ? "text-[#44DDA0]" : "text-[#B23434]"
-                    }`}
-                  >
-                    {evcar.battery}
-                  </span>
-                  {" %"}
-                </div>
-              </div>
-              <img src={Car} alt="map" className="h-36" />
-            </div>
-          </div>
 
-          <div className="w-full text-[#575757] mt-5 flex flex-col ">
-            <div className="flex flex-col">
-              <div>Average Time</div>
-              <div className="flex gap-1 items-center">
-                <span className="text-3xl text-white">{evcar.time}</span>
-                {" min"}
+                <div className="flex flex-col py-2  items-center">
+                  <button
+                    onClick={addReview}
+                    className="bg-[#44bda0] text-white  px-4 py-2 rounded-md"
+                  >
+                    Add Review
+                  </button>
+                </div>
               </div>
+
+              {/* Display reviews */}
+              {sortedReviews.map((review, index) => (
+                <div
+                  key={index}
+                  className="border border-gray-300 p-4 rounded-md mb-4"
+                >
+                  <div className="flex items-center justify-between">
+                    <p className="font-semibold">{review.text}</p>
+                    {renderStars(review.rating)}
+                  </div>
+                  <p className="text-gray-500">
+                    {new Date(review.timestamp).toLocaleString()}
+                  </p>
+                </div>
+              ))}
             </div>
-            <Line />
           </div>
         </div>
       </div>
