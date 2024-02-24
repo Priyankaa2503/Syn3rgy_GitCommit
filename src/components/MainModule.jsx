@@ -1,16 +1,13 @@
-import React from 'react'
+import React from "react";
 import {
   Account,
   Dashboard,
   MyTrips,
   Stations,
-  SubscriptionPlan
-} from "./sections"
+  SubscriptionPlan,
+} from "./sections";
 
-const MainModule = ({
-  active,
-  setActive
-}) => {
+const MainModule = ({ active, setActive }) => {
   const getSection = () => {
     switch (active) {
       case "Dashboard":
@@ -26,17 +23,15 @@ const MainModule = ({
       default:
         return <Dashboard />;
     }
-  }
+  };
   return (
     <div className="w-full h-screen flex flex-col items-center justify-center p-5 gap-4">
       <div className="w-full h-32 flex justify-between items-center">
         <div className="text-3xl font-semibold">{active}</div>
       </div>
-      <div className='w-full h-full overflow-y-auto'>
-        {getSection()}
-      </div>
+      <div className="w-full h-full overflow-y-auto">{getSection()}</div>
     </div>
   );
-}
+};
 
-export default MainModule
+export default MainModule;
