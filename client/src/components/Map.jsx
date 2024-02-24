@@ -1,4 +1,4 @@
-{
+
   /* <div className="flex gap-x-24 justify-center">
         <div className="flex flex-col gap-y-6">
           <div className="border p-6 border-[#44DDA0] rounded-xl ">
@@ -190,76 +190,4 @@
             <Line />
           </div>
         </div>
-      </div> */
-}
-const getDirections = async (origin, destination) => {
-  const apiKey = "AIzaSyAGHFR3hfwbf_yGyfkPFZ7aSfj7Jr7RDfg"; // Replace with your API key
-  const url = "https://routes.googleapis.com/directions/v2:computeRoutes";
-  const futureTime = new Date();
-  futureTime.setHours(futureTime.getHours() + 1); // Set to one hour in the future
-  const data = {
-    origin: { location: { latLng: origin } },
-    destination: { location: { latLng: destination } },
-    travelMode: "DRIVE",
-    routingPreference: "TRAFFIC_AWARE",
-    departureTime: futureTime.toISOString(),
-    computeAlternativeRoutes: false,
-    routeModifiers: {
-      avoidTolls: false,
-      avoidHighways: false,
-      avoidFerries: false,
-    },
-    languageCode: "en-US",
-    units: "IMPERIAL",
-  };
-
-  const headers = {
-    "Content-Type": "application/json",
-    "X-Goog-Api-Key": apiKey,
-    "X-Goog-FieldMask":
-      "routes.duration,routes.distanceMeters,routes.polyline.encodedPolyline",
-  };
-
-  try {
-    const response = await axios.post(url, data, { headers });
-    const routes = response.data.routes;
-    console.log("Routes:", routes);
-    // Extract the polyline from the first route
-    const polyline = routes[0].polyline.encodedPolyline;
-    // Decode the polyline to an array of LatLng objects
-    const decodedPolyline =
-      google.maps?.geometry?.encoding?.decodePath(polyline);
-
-    // Set the directions state
-    setDirections(decodedPolyline);
-    // console.log(directions)
-
-    // Create a polyline on the map
-    const routePolyline = new google.maps.Polyline({
-      path: decodedPolyline,
-      geodesic: true,
-      strokeColor: "#FF0000", // Red color
-      strokeOpacity: 1.0,
-      strokeWeight: 3,
-    });
-    // Add the polyline to the map
-    routePolyline.setMap(map);
-  } catch (error) {
-    console.error("Error fetching directions:", error);
-  }
-};
-
-
-<button
-  onClick={() =>
-    getDirections(
-      { latitude: 37.7937, longitude: -122.3965 },
-      {
-        latitude: station?.location?.latitude,
-        longitude: station?.location?.longitude,
-      }
-    )
-  }
->
-  Get Directions
-</button>;
+      </div> 
