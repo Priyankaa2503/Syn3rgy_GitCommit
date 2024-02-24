@@ -61,14 +61,47 @@ const Dashboard = ({ data }) => {
     fuelCost
   );
 
-  const [stations, setStations] = useState([]);
+  // const [stations, setStations] = useState([]);
 
-  const getStationDetails = async (stationId) => {
+  const getStationDetails = async () => {
     try {
-      const res = await axios.get(
-        `https://places.googleapis.com/v1/places/${stationId}?fields=id,displayName,formattedAddress&key=AIzaSyAGHFR3hfwbf_yGyfkPFZ7aSfj7Jr7RDfg`
-      );
-      return res.data;
+      // const res = await axios.get(
+      //   `https://places.googleapis.com/v1/places/${stationId}?fields=id,displayName,formattedAddress&key=AIzaSyAGHFR3hfwbf_yGyfkPFZ7aSfj7Jr7RDfg`
+      // );
+      // return res.data;
+      const url = "https://places.googleapis.com/v1/places:searchNearby";
+      const apiKey = "AIzaSyAGHFR3hfwbf_yGyfkPFZ7aSfj7Jr7RDfg"; // replace with your API key
+
+      const data = {
+        includedTypes: ["electric_vehicle_charging_station"],
+        maxResultCount: 10,
+        locationRestriction: {
+          circle: {
+            center: {
+              latitude: 37.7937,
+              longitude: -122.3965,
+            },
+            radius: 200.0,
+          },
+        },
+      };
+      await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-Goog-Api-Key": apiKey,
+          "X-Goog-FieldMask": "*",
+        },
+        body: JSON.stringify(data),
+      })
+        .then(async (res) => {
+          const data = await res.json();
+          console.log(data.places);
+          setGoogleStations(data.places);
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+        });
     } catch (err) {
       toast.error("Failed to fetch station details");
     }
@@ -76,20 +109,18 @@ const Dashboard = ({ data }) => {
 
   const getStationsData = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/stations");
-      const stationPromises = res.data.map((station) =>
-        getStationDetails(station.stationId)
-      );
-      const stationDetails = await Promise.all(stationPromises);
-      setStations(stationDetails);
+      axios
+        .get("http://localhost:5000/stations")
+        .then((res) => {
+          setBackendStations(res.data);
+        })
+        .catch((err) => {
+          toast.error("Error:", err);
+        });
     } catch (err) {
       toast.error("Failed to fetch stations data");
     }
   };
-
-  useEffect(() => {
-    getStationsData();
-  }, []);
 
   // const stations = {
   //   favourite: [
@@ -162,18 +193,34 @@ const Dashboard = ({ data }) => {
   // };
 
   const [stationType, setStationType] = useState("Favourite");
-  const [stationData, setStationData] = useState([]);
+  // const [stationData, setStationData] = useState([]);
+
+  const [googleStations, setGoogleStations] = useState([]);
+  const [backendStations, setBackendStations] = useState([]);
+
+  const [dataToDisplay, setDataToDisplay] = useState([]);
+
+  const getDetails = (stationId) => {
+    const s = googleStations?.filter((station) => station.id === stationId);
+    return s[0];
+  };
 
   useEffect(() => {
     if (stationType === "Favourite") {
-      const topTwoStations = [...stations]
-        .sort((a, b) => b.noOfVisits - a.noOfVisits)
-        .slice(0, 2);
-      setStationData(topTwoStations);
+      const sortedStations = [...backendStations].sort(
+        (a, b) => b.noOfVisits - a.noOfVisits
+      );
+      const topTwoStations = sortedStations.slice(0, 2);
+      setDataToDisplay(topTwoStations);
     } else {
-      setStationData(stations);
+      setDataToDisplay(backendStations);
     }
-  }, [stations, stationType]);
+  }, [stationType, backendStations]);
+
+  useEffect(() => {
+    getStationsData();
+    getStationDetails();
+  }, []);
 
   const calculateTimeRemaining = (batteryPercentage, powerReserve) => {
     const consumptionRate = 10; // 10 km per hour
@@ -482,62 +529,69 @@ const Dashboard = ({ data }) => {
           </div>
         </div>
         <div className="w-full mt-5 gap-3 flex flex-col h-full">
-          {stationData?.map((station, index) => (
-            <div
-              key={index}
-              className="w-full p-4 my-2 shadow-md shadow-[#00000040] rounded-xl bg-[#0F0F0F] flex justify-between items-center"
-            >
-              <div className="w-1/2">
-                <img
-                  src={GasStation}
-                  alt=""
-                  className="w-20 h-20 shadow-md shadow-black rounded-lg"
-                />
+          {dataToDisplay?.map((station, index) => {
+            const details = getDetails(station.stationId);
+            return (
+              <div
+                key={index}
+                className="w-full p-4 my-2 shadow-md shadow-[#00000040] rounded-xl bg-[#0F0F0F] flex justify-between items-center"
+              >
+                <div className="w-1/2">
+                  <img
+                    src={GasStation}
+                    alt=""
+                    className="w-20 h-20 shadow-md shadow-black rounded-lg"
+                  />
+                </div>
+                <div className="flex w-full items-start flex-col gap-3">
+                  <div className="flex flex-col">
+                    <div className="font-semibold">
+                      {details?.displayName?.text}
+                    </div>
+                    <div className="text-[#575757] text-xs">
+                      {details?.shortFormattedAddress}
+                    </div>
+                  </div>
+                  <div className="flex flex-col gap-1">
+                    <div className="text-[#575757] text-xs">
+                      Ports available
+                    </div>
+                    <div className="text-white text-sm">
+                      {details?.evChargeOptions?.connectorCount}
+                    </div>
+                  </div>
+                </div>
+                <div className="grid w-full text-sm grid-cols-2 gap-2 justify-center items-center">
+                  <div className="flex flex-col">
+                    <div className="text-[#575757]">Parking Fee</div>
+                    <div className="text-white text-base">
+                      {"$ "}
+                      {station?.parkingFee}
+                    </div>
+                  </div>
+                  <div className="flex flex-col">
+                    <div className="text-[#575757]">Arrival</div>
+                    <div className="text-white text-base">
+                      {station?.arrivalTime}
+                    </div>
+                  </div>
+                  <div className="flex flex-col">
+                    <div className="text-[#575757]">Per kwh</div>
+                    <div className="text-white text-base">
+                      {"$ "}
+                      {station?.perkWh}
+                    </div>
+                  </div>
+                  <div className="flex flex-col">
+                    <div className="text-[#575757]">Departure</div>
+                    <div className="text-white text-base">
+                      {station?.departureTime}
+                    </div>
+                  </div>
+                </div>
               </div>
-              <div className="flex w-full items-start flex-col gap-3">
-                <div className="flex flex-col">
-                  <div className="font-semibold">
-                    {station?.displayName?.text}
-                  </div>
-                  <div className="text-[#575757] text-xs">
-                    {station.formattedAddress}
-                  </div>
-                </div>
-                <div className="flex flex-col gap-1">
-                  <div className="text-[#575757] text-xs">Ports available</div>
-                  <div className="text-white text-sm">{station.ports}</div>
-                </div>
-              </div>
-              <div className="grid w-full text-sm grid-cols-2 gap-2 justify-center items-center">
-                <div className="flex flex-col">
-                  <div className="text-[#575757]">Parking Fee</div>
-                  <div className="text-white text-base">
-                    {"$ "}
-                    {station.parkingFee}
-                  </div>
-                </div>
-                <div className="flex flex-col">
-                  <div className="text-[#575757]">Arrival</div>
-                  <div className="text-white text-base">
-                    {station.arrivalTime}
-                  </div>
-                </div>
-                <div className="flex flex-col">
-                  <div className="text-[#575757]">Per kwh</div>
-                  <div className="text-white text-base">
-                    {"$ "}
-                    {station.power}
-                  </div>
-                </div>
-                <div className="flex flex-col">
-                  <div className="text-[#575757]">Departure</div>
-                  <div className="text-white text-base">
-                    {station.departureTime}
-                  </div>
-                </div>
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </div>

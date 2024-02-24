@@ -37,7 +37,9 @@ db.connect((err) => {
     CREATE TABLE IF NOT EXISTS stations (
       id INT AUTO_INCREMENT PRIMARY KEY,
       stationId VARCHAR(100),
-      noOfVisits INT
+      noOfVisits INT,
+      parkingFee DECIMAL(10, 2),
+      perkWh DECIMAL(10, 2)
     )
   `;
 
