@@ -33,11 +33,26 @@ db.connect((err) => {
     )
   `;
 
+  const createStationsTable = `
+    CREATE TABLE IF NOT EXISTS stations (
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      stationId VARCHAR(100),
+      noOfVisits INT
+    )
+  `;
+
   db.query(createUsersTable, (err, results) => {
     if (err) {
       throw err;
     }
     console.log("Users table created/already exists");
+  });
+
+  db.query(createStationsTable, (err, results) => {
+    if (err) {
+      throw err;
+    }
+    console.log("Stations table created/already exists");
   });
 });
 
