@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Icons from "../Icons";
-import {MdOutlineElectricBolt} from "react-icons/md"
+import { MdOutlineElectricBolt } from "react-icons/md";
+import GasStation from "../../assets/teslaCity-a2bda4ca.png";
 import StackedBar from "../../charts/StackedBar";
 
 const ProgressBar = ({ title, value, max }) => {
@@ -40,6 +41,86 @@ const Dashboard = () => {
   const [showGasSavingsDropdown, setShowGasSavingsDropdown] = useState(false);
   const [charge, setCharge] = useState("Year");
   const [showChargeDropdown, setChargeDropdown] = useState(false);
+
+  const stations = {
+    favourite: [
+      {
+        name: "Tesla Station",
+        location: "1780 N Beale Rd, Marysville",
+        ports: 4,
+        parkingFee: 0.1,
+        power: 0.5,
+        arrivalTime: "Today, 12:00",
+        departureTime: "Today, 15:00",
+      },
+      {
+        name: "Tesla Station",
+        location: "1780 N Beale Rd, Marysville",
+        ports: 4,
+        parkingFee: 0.1,
+        power: 0.5,
+        arrivalTime: "Today 12:00",
+        departureTime: "Today, 15:00",
+      },
+    ],
+    all: [
+      {
+        name: "Tesla Station",
+        location: "1780 N Beale Rd, Marysville",
+        ports: 4,
+        parkingFee: 0.1,
+        power: 0.5,
+        arrivalTime: "Today 12:00",
+        departureTime: "Today, 15:00",
+      },
+      {
+        name: "Tesla Station",
+        location: "1780 N Beale Rd, Marysville",
+        ports: 4,
+        parkingFee: 0.1,
+        power: 0.5,
+        arrivalTime: "Today 12:00",
+        departureTime: "Today, 15:00",
+      },
+      {
+        name: "Tesla Station",
+        location: "1780 N Beale Rd, Marysville",
+        ports: 4,
+        parkingFee: 0.1,
+        power: 0.5,
+        arrivalTime: "Today 12:00",
+        departureTime: "Today, 15:00",
+      },
+      {
+        name: "Tesla Station",
+        location: "1780 N Beale Rd, Marysville",
+        ports: 4,
+        parkingFee: 0.1,
+        power: 0.5,
+        arrivalTime: "Today 12:00",
+        departureTime: "Today, 15:00",
+      },
+      {
+        name: "Tesla Station",
+        location: "1780 N Beale Rd, Marysville",
+        ports: 4,
+        parkingFee: 0.1,
+        power: 0.5,
+        arrivalTime: "Today 12:00",
+        departureTime: "Today, 15:00",
+      },
+    ],
+  };
+  const [stationType, setStationType] = useState("Favourite");
+  const [stationData, setStationData] = useState([]);
+  useEffect(() => {
+    if (stationType === "Favourite") {
+      setStationData(stations.favourite);
+    } else {
+      setStationData(stations.all);
+    }
+  }, [stationType]);
+
   return (
     <div className="w-full gap-4 h-fit overflow-y-auto flex flex-col justify-center items-center">
       {/* ev cars section */}
@@ -201,7 +282,7 @@ const Dashboard = () => {
       {/* Charge statistics */}
       <div className="w-full p-8 shadow-md shadow-[#00000040] rounded-xl bg-[#141414]">
         <div className="w-full items-center justify-between flex">
-          <div className="text-lg font-semibold">Charge statisticsx</div>
+          <div className="text-lg font-semibold">Charge statistics</div>
           <div className="relative">
             <div
               className="cursor-pointer"
@@ -281,6 +362,92 @@ const Dashboard = () => {
         <div className="flex flex-col gap-2 w-full mt-5">
           <ProgressBar title="CA$32" value={3} max={12} />
           <ProgressBar title="CA$57" value={7} max={12} />
+        </div>
+      </div>
+      {/* Stations list */}
+      <div className="w-full p-8 shadow-md shadow-[#00000040] rounded-xl bg-[#141414]">
+        <div className="w-full items-center justify-between flex">
+          <div className="text-lg font-semibold">Stations list</div>
+          <div className="flex justify-center items-center gap-4">
+            <div
+              className={`transition-all cursor-pointer duration-200 ${
+                stationType === "Favourite"
+                  ? "text-[#44DDA0]"
+                  : "text-[#575757]"
+              }`}
+              onClick={() => {
+                setStationType("Favourite");
+              }}
+            >
+              Favourite
+            </div>
+            <div
+              className={`transition-all cursor-pointer duration-200 ${
+                stationType === "All" ? "text-[#44DDA0]" : "text-[#575757]"
+              }`}
+              onClick={() => {
+                setStationType("All");
+              }}
+            >
+              All
+            </div>
+          </div>
+        </div>
+        <div className="w-full mt-5 gap-3 flex flex-col h-full">
+          {stationData.map((station, index) => (
+            <div
+              key={index}
+              className="w-full p-4 my-2 shadow-md shadow-[#00000040] rounded-xl bg-[#0F0F0F] flex justify-between items-center"
+            >
+              <div className="w-1/2">
+                <img
+                  src={GasStation}
+                  alt=""
+                  className="w-20 h-20 shadow-md shadow-black rounded-lg"
+                />
+              </div>
+              <div className="flex w-full items-start flex-col gap-3">
+                <div className="flex flex-col">
+                  <div className="font-semibold">{station.name}</div>
+                  <div className="text-[#575757] text-xs">
+                    {station.location}
+                  </div>
+                </div>
+                <div className="flex flex-col gap-1">
+                  <div className="text-[#575757] text-xs">Ports available</div>
+                  <div className="text-white text-sm">{station.ports}</div>
+                </div>
+              </div>
+              <div className="grid w-full text-sm grid-cols-2 gap-2 justify-center items-center">
+                <div className="flex flex-col">
+                  <div className="text-[#575757]">Parking Fee</div>
+                  <div className="text-white text-base">
+                    {"$ "}
+                    {station.parkingFee}
+                  </div>
+                </div>
+                <div className="flex flex-col">
+                  <div className="text-[#575757]">Arrival</div>
+                  <div className="text-white text-base">
+                    {station.arrivalTime}
+                  </div>
+                </div>
+                <div className="flex flex-col">
+                  <div className="text-[#575757]">Per kwh</div>
+                  <div className="text-white text-base">
+                    {"$ "}
+                    {station.power}
+                  </div>
+                </div>
+                <div className="flex flex-col">
+                  <div className="text-[#575757]">Departure</div>
+                  <div className="text-white text-base">
+                    {station.departureTime}
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </div>
