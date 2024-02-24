@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Icons from "../Icons";
 import {MdOutlineElectricBolt} from "react-icons/md"
+import StackedBar from "../../charts/StackedBar";
 
 const ProgressBar = ({ title, value, max }) => {
   const cells = [];
@@ -276,6 +277,7 @@ const Dashboard = () => {
             </div>
           </div>
         </div>
+        <StackedBar/>
         <div className="flex flex-col gap-2 w-full mt-5">
           <ProgressBar title="CA$32" value={3} max={12} />
           <ProgressBar title="CA$57" value={7} max={12} />

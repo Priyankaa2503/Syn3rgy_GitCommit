@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { MdOutlineElectricBolt, MdCancelPresentation } from "react-icons/md";
 import Car from "../assets/Car.png";
+import Line from "../../charts/Line";
 
 const Stations = () => {
   const [evcar, setEvcar] = useState({
@@ -105,7 +106,6 @@ const Stations = () => {
               <div>EV</div>
               <div className="flex gap-1 items-center">
                 <span className="text-3xl text-white">{evcar.car}</span>
-                {" h"}
               </div>
             </div>
             <div className="flex flex-col">
@@ -200,7 +200,7 @@ const Stations = () => {
             </div>
           </div>
 
-          <div className="w-full text-[#575757] mt-5 flex  justify-between items-center">
+          <div className="w-full text-[#575757] mt-5 flex flex-col ">
             <div className="flex flex-col">
               <div>Average Time</div>
               <div className="flex gap-1 items-center">
@@ -208,8 +208,7 @@ const Stations = () => {
                 {" min"}
               </div>
             </div>
-            {/* <Line/> */}
-            
+            <Line />
           </div>
         </div>
       </div>
