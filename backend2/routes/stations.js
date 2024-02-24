@@ -4,15 +4,21 @@ const db = require("../db.js");
 
 // Route to add a station
 router.post("/", (req, res) => {
-  const { stationId, noOfVisits } = req.body;
+  const { stationId, noOfVisits, parkingFee, perkWh } = req.body;
   db.query(
-    "INSERT INTO stations (stationId, noOfVisits) VALUES (?, ?)",
-    [stationId, noOfVisits],
+    "INSERT INTO stations (stationId, noOfVisits, parkingFee, perkWh) VALUES (?, ?, ?, ?)",
+    [stationId, noOfVisits, parkingFee, perkWh],
     (error, results) => {
       if (error) {
         res.status(500).send("Error adding station");
       } else {
-        res.status(200).send({ id: results.insertId, stationId, noOfVisits });
+        res.status(200).send({
+          id: results.insertId,
+          stationId,
+          noOfVisits,
+          parkingFee,
+          perkWh,
+        });
       }
     }
   );
