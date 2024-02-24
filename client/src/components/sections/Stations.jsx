@@ -23,6 +23,11 @@ const Stations = () => {
   });
   let map;
   const [stations, setStations] = useState([]);
+  const [estimatedTime, setEstimatedTime] = useState("");
+  const [estimatedDistance, setEstimatedDistance] = useState("");
+  const [filteredStations, setFilteredStations] = useState([]);
+  const [selectedFilters, setSelectedFilters] = useState([]);
+  
   useEffect(() => {
     // Load the Google Maps script
     const script = document.createElement("script");
@@ -106,7 +111,7 @@ const Stations = () => {
             latitude: 37.7937,
             longitude: -122.3965,
           },
-          radius: 200.0,
+          radius: 900.0,
         },
       },
     };
@@ -141,10 +146,10 @@ const Stations = () => {
   };
 
   const getDirections = async (origin, destination) => {
-    const apiKey =  "AIzaSyAGHFR3hfwbf_yGyfkPFZ7aSfj7Jr7RDfg"; 
+    const apiKey = "AIzaSyAGHFR3hfwbf_yGyfkPFZ7aSfj7Jr7RDfg";
     const directionsService = new google.maps.DirectionsService();
     const directionsRenderer = new google.maps.DirectionsRenderer();
-    
+
     // Set up map if not already initialized
     if (!map) {
       map = new google.maps.Map(document.getElementById("map"), {
@@ -152,33 +157,42 @@ const Stations = () => {
         center: { lat: 37.7937, lng: -122.3965 },
       });
     }
-  
+
     // Configure DirectionsRenderer to render on map
     directionsRenderer.setMap(map);
-  
+
     // Convert origin and destination to LatLng objects
-    const originLatLng = new google.maps.LatLng(origin.latitude, origin.longitude);
-    const destinationLatLng = new google.maps.LatLng(destination.latitude, destination.longitude);
-  
+    const originLatLng = new google.maps.LatLng(
+      origin.latitude,
+      origin.longitude
+    );
+    const destinationLatLng = new google.maps.LatLng(
+      destination.latitude,
+      destination.longitude
+    );
+
     // Configure directions request
     const request = {
       origin: originLatLng,
       destination: destinationLatLng,
-      travelMode: google.maps.TravelMode.DRIVING
+      travelMode: google.maps.TravelMode.DRIVING,
     };
-  
+
     // Request directions
     directionsService.route(request, (response, status) => {
       if (status === google.maps.DirectionsStatus.OK) {
         // Display the route on the map
+        const route = response.routes[0];
+        const estimatedTime = route.legs[0].duration.text;
+        const estimatedDistance = route.legs[0].distance.text;
+        setEstimatedTime(estimatedTime);
+        setEstimatedDistance(estimatedDistance);
         directionsRenderer.setDirections(response);
       } else {
         console.error("Error fetching directions:", status);
       }
     });
   };
-  
-  
 
   return (
     <div style={{ position: "relative" }}>
@@ -192,9 +206,13 @@ const Stations = () => {
           height: "900px",
           overflow: "auto",
           color: "black",
-          backgroundColor: "rgba(255, 255, 255, 0.8)", // Semi-transparent background
+          backgroundColor: "rgba(255, 255, 255, 0.8)",
         }}
       >
+        <div>
+          <p>Estimated Time: {estimatedTime}</p>
+          <p>Estimated Distance: {estimatedDistance}</p>
+        </div>
         {stations?.map((station, index) => (
           <div
             className="text-white p-5 rounded-md overflow-x-hidden flex flex-col  bg-black border-2 border-white"
@@ -223,16 +241,6 @@ const Stations = () => {
               <p className="">{station?.formattedAddress}</p>
             </div>
             <p>{station?.currentOpeningHours?.openNow}</p>
-            {/* <p className="py-4">
-              {Object.entries(
-                station?.currentOpeningHours?.weekdayDescriptions || {}
-              ).map(([day, hours]) => (
-                <span key={day} className="text-sm py-2 text-[#8d8787]">
-                  {hours}
-                  <br />
-                </span>
-              ))}
-            </p> */}
             <p className="my- text-[#44dba0]">Open 24 Hours</p>
             <div className="flex items-center">
               <FaPhoneAlt size={16} />
