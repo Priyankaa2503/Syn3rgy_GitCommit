@@ -24,6 +24,7 @@ const Stations = () => {
   let map;
   const [stations, setStations] = useState([]);
   const [estimatedTime, setEstimatedTime] = useState("");
+  const [estimatedTimeInTraffic, setEstimatedTimeInTraffic] = useState("");
   const [estimatedDistance, setEstimatedDistance] = useState("");
   const [filteredStations, setFilteredStations] = useState([]);
   const [selectedFilters, setSelectedFilters] = useState([]);
@@ -172,20 +173,33 @@ const Stations = () => {
     );
 
     // Configure directions request
+    // const request = {
+    //   origin: originLatLng,
+    //   destination: destinationLatLng,
+    //   travelMode: google.maps.TravelMode.DRIVING,
+    // };
+
+    const trafficLayer = new google.maps.TrafficLayer();
+    trafficLayer.setMap(map);
     const request = {
       origin: originLatLng,
       destination: destinationLatLng,
       travelMode: google.maps.TravelMode.DRIVING,
+      drivingOptions: {
+        departureTime: new Date(), // for the current time
+        trafficModel: "pessimistic",
+      },
     };
 
     // Request directions
     directionsService.route(request, (response, status) => {
       if (status === google.maps.DirectionsStatus.OK) {
-        // Display the route on the map
         const route = response.routes[0];
+        const estimatedTimeInTraffic = route.legs[0].duration_in_traffic.text;
         const estimatedTime = route.legs[0].duration.text;
         const estimatedDistance = route.legs[0].distance.text;
         setEstimatedTime(estimatedTime);
+        setEstimatedTimeInTraffic(estimatedTimeInTraffic);
         setEstimatedDistance(estimatedDistance);
         directionsRenderer.setDirections(response);
       } else {
@@ -201,7 +215,7 @@ const Stations = () => {
         style={{ position: "relative" }}
       >
         <div id="map" style={{ height: "100%", width: "100%" }}></div>
-        {estimatedDistance && estimatedTime && (
+        {estimatedDistance && estimatedTime && estimatedTimeInTraffic && (
           <div
             style={{
               position: "absolute",
@@ -216,6 +230,10 @@ const Stations = () => {
             <p className="text-white">
               Estimated Time:{" "}
               <span className="text-[#44dba0]">{estimatedTime}</span>
+            </p>
+            <p className="text-white">
+              Estimated Time in Traffic:{" "}
+              <span className="text-[#44dba0]">{estimatedTimeInTraffic}</span>
             </p>
             <p className="text-white">
               Estimated Distance:{" "}
