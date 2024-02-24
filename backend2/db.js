@@ -28,6 +28,7 @@ db.connect((err) => {
       evYear INT,
       evBatteryCapacity DECIMAL,
       evRange DECIMAL,
+      evPowerReserve INT,
       evChargingConnector VARCHAR(100)
     )
   `;
