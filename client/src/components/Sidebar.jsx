@@ -99,7 +99,7 @@ const Sidebar = ({ data, getData, active, setActive }) => {
                 key={idx}
                 car={ev.evName}
                 model={ev.evModel}
-                battery={ev.evPowerReserve}
+                battery={ev.evBatteryCapacity}
                 range={ev.evRange}
               />
             );
