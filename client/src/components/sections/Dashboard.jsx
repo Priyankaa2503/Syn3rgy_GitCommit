@@ -4,7 +4,7 @@ import { MdOutlineElectricBolt } from "react-icons/md";
 import GasStation from "../../assets/teslaCity-a2bda4ca.png";
 import StackedBar from "../../charts/StackedBar";
 
-const ProgressBar = ({ title, value, max }) => {
+const ProgressBar = ({ title, value, max, gasEqual }) => {
   const cells = [];
   for (let i = 0; i < max; i++) {
     cells.push(
@@ -24,7 +24,9 @@ const ProgressBar = ({ title, value, max }) => {
           {title}
           <MdOutlineElectricBolt size={20} color="#44DDA0" />
         </div>
-        <div className="text-sm text-[#575757]">Total Spend</div>
+        <div className="text-sm text-[#575757]">
+          {gasEqual ? "Gas Equal" : "Total Spend"}
+        </div>
       </div>
     </div>
   );
@@ -33,7 +35,7 @@ const ProgressBar = ({ title, value, max }) => {
 const Dashboard = () => {
   const [evcar, setEvcar] = useState({
     car: "Nissan",
-    battery: 58,
+    battery: 40,
     time: "5:21",
     powerReserve: 400,
   });
@@ -111,6 +113,20 @@ const Dashboard = () => {
       },
     ],
   };
+  const calculateGasSavings = (distanceTraveled, fuelEfficiency, fuelCost) => {
+    const fuelConsumed = distanceTraveled / fuelEfficiency;
+    const savedMoney = fuelConsumed * fuelCost;
+    return savedMoney.toFixed(2); // return the saved money with two decimal places
+  };
+
+  const distanceTraveled = 1000; // in kilometers
+  const fuelEfficiency = 15; // in kilometers per liter
+  const fuelCost = 2; // in dollars per liter
+  const savedMoney = calculateGasSavings(
+    distanceTraveled,
+    fuelEfficiency,
+    fuelCost
+  );
   const [stationType, setStationType] = useState("Favourite");
   const [stationData, setStationData] = useState([]);
   useEffect(() => {
@@ -120,6 +136,44 @@ const Dashboard = () => {
       setStationData(stations.all);
     }
   }, [stationType]);
+
+  const calculateTimeRemaining = (batteryPercentage, powerReserve) => {
+    const consumptionRate = 10; // 10 km per hour
+    const timeRemaining =
+      (batteryPercentage / 100) * (powerReserve / consumptionRate);
+    return timeRemaining.toFixed(2); // return time remaining in hours with two decimal places
+  };
+  const chargingWidth = `${evcar.battery}%`;
+  const calculateUsingPrivate = (powerConsumption, electricityCost) => {
+    return (powerConsumption * electricityCost).toFixed(2); // Returns the cost in dollars
+  };
+
+  // Function to calculate the amount of CO2 emissions saved
+  const calculateCO2Saved = (powerConsumption, emissionFactor) => {
+    const CO2Saved = powerConsumption * emissionFactor;
+    // Assuming 1 kgCO2 is equivalent to approximately 0.554 m³ of burned fuel
+    const fuelSaved = CO2Saved * 0.554;
+    return fuelSaved.toFixed(2); // Returns the amount of fuel saved in m³
+  };
+
+  // Assumed values for electricity cost and emission factor
+  const electricityCost = 0.12; // $/kWh
+  const emissionFactor = 0.5; // kgCO2/kWh (example value)
+
+  const usingPrivateCost = calculateUsingPrivate(
+    evcar.powerReserve,
+    electricityCost
+  );
+  const fuelSaved = calculateCO2Saved(evcar.powerReserve, emissionFactor);
+
+  useEffect(() => {
+    // Update the time remaining whenever the battery or type of vehicle changes
+    const timeRemaining = calculateTimeRemaining(
+      evcar.battery,
+      evcar.powerReserve
+    );
+    setEvcar((prevState) => ({ ...prevState, time: timeRemaining }));
+  }, [evcar.battery, evcar.car, evcar.powerReserve]);
 
   return (
     <div className="w-full gap-4 h-fit overflow-y-auto flex flex-col justify-center items-center">
@@ -197,7 +251,7 @@ const Dashboard = () => {
           <div className="w-1/2 h-16 rounded-lg bg-[#0F0F0F] relative">
             <div
               className="h-full transition-all duration-500 rounded-lg bg-gradient-to-r from-[#44DDA0] to-[#84e1bc] absolute top-0 left-0"
-              style={{ width: `${evcar.battery}%` }}
+              style={{ width: chargingWidth }}
             />
             <div className="absolute top-0 right-5 flex items-center justify-center h-full text-white">
               <div className="flex flex-col text-[#575757]">
@@ -253,20 +307,20 @@ const Dashboard = () => {
             <div>Saved Money</div>
             <div className="flex gap-1 items-center">
               {" $"}
-              <span className="text-3xl text-white">1,716</span>
+              <span className="text-3xl text-white">{savedMoney}</span>
             </div>
           </div>
           <div className="flex flex-col">
             <div>Using Private</div>
             <div className="flex gap-1 items-center">
               {" $"}
-              <span className="text-3xl text-white">259</span>
+              <span className="text-3xl text-white">{usingPrivateCost}</span>
             </div>
           </div>
           <div className="flex flex-col">
             <div>m³, not burned</div>
             <div className="flex gap-1 items-center">
-              <span className="text-3xl text-white">{evcar.powerReserve}</span>
+              <span className="text-3xl text-white">{fuelSaved}</span>
               <div>
                 {" 0"}
                 <sub>2</sub>
@@ -276,7 +330,7 @@ const Dashboard = () => {
         </div>
         <div className="flex flex-col gap-2 w-full mt-5">
           <ProgressBar title="CA$32" value={3} max={12} />
-          <ProgressBar title="CA$57" value={7} max={12} />
+          <ProgressBar title="CA$57" value={7} max={12} gasEqual={true} />
         </div>
       </div>
       {/* Charge statistics */}
@@ -358,7 +412,7 @@ const Dashboard = () => {
             </div>
           </div>
         </div>
-        <StackedBar/>
+        <StackedBar />
         <div className="flex flex-col gap-2 w-full mt-5">
           <ProgressBar title="CA$32" value={3} max={12} />
           <ProgressBar title="CA$57" value={7} max={12} />
