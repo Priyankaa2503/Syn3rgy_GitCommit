@@ -11,6 +11,7 @@ const Link = ({ name, active, setActive }) => {
       } px-4 py-3 cursor-pointer flex items-center gap-3 transition-all duration-200`}
       onClick={() => {
         setActive(name);
+        localStorage.removeItem("activeCar");
       }}
     >
       <Icons
@@ -24,9 +25,18 @@ const Link = ({ name, active, setActive }) => {
   );
 };
 
-const CarCard = ({ car, model, battery, range }) => {
+const CarCard = ({ car, model, battery, range, setActive }) => {
   return (
-    <div className="w-full flex flex-col items-center gap-3 p-2 bg-[#0F0F0F] rounded-lg cursor-pointer transition-all duration-200">
+    <div
+      className="w-full flex flex-col items-center gap-3 p-2 bg-[#0F0F0F] rounded-lg cursor-pointer transition-all duration-200"
+      onClick={() => {
+        setActive("Car Details");
+        localStorage.setItem(
+          "activeCar",
+          JSON.stringify({ car, model, battery, range })
+        );
+      }}
+    >
       <div className="flex px-3 w-full justify-between items-center">
         <img src={Car} alt="" className="w-fit h-16" />
         <div className="flex flex-col gap-1">
@@ -78,7 +88,6 @@ const Sidebar = ({ data, getData, active, setActive }) => {
         <Link name="Dashboard" active={active} setActive={setActive} />
         <Link name="Stations" active={active} setActive={setActive} />
         <Link name="My Trips" active={active} setActive={setActive} />
-        <Link name="Account" active={active} setActive={setActive} />
         {/* <Link name="Subscription Plan" active={active} setActive={setActive} /> */}
       </div>
       <div className="w-full p-5 flex flex-col gap-5">
@@ -101,6 +110,7 @@ const Sidebar = ({ data, getData, active, setActive }) => {
                 model={ev.evModel}
                 battery={ev.evBatteryCapacity}
                 range={ev.evRange}
+                setActive={setActive}
               />
             );
           })}
