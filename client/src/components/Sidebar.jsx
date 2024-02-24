@@ -1,6 +1,6 @@
 import React from "react";
 import Icons from "./Icons";
-import Car from "../assets/Car.png"
+import Car from "./assets/Car.png"
 
 const Link = ({ name, active, setActive }) => {
   return (

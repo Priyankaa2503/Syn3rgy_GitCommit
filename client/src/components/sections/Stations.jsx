@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { MdOutlineElectricBolt, MdCancelPresentation } from "react-icons/md";
-import Car from "../../assets/Car.png";
+import Car from "../assets/Car.png";
 
 const Stations = () => {
   const [evcar, setEvcar] = useState({
@@ -13,11 +13,10 @@ const Stations = () => {
     type: "DC",
     slot: 5,
     price: 60,
-    status: 'Good'
+    status: "Good",
   });
   return (
     <div>
-      Stations
       <div className="flex gap-x-24 justify-center">
         <div className="flex flex-col gap-y-6">
           <div className="border p-6 border-[#44DDA0] rounded-xl ">
@@ -100,7 +99,7 @@ const Stations = () => {
         <div className="">
           <p className="text-lg font-medium text-white ml-6 ">Vehicle Stats</p>
           <img src={Car} alt="" className="h-64" />
-          
+
           <div className="w-full text-[#575757] mt-5 flex  justify-between items-center">
             <div className="flex flex-col">
               <div>EV</div>
@@ -114,7 +113,9 @@ const Stations = () => {
               <div className="flex gap-1 items-center">
                 <span
                   className={`text-3xl ${
-                    evcar.battery === 'Good' ? "text-[#44DDA0]" : "text-[#B23434]"
+                    evcar.battery === "Good"
+                      ? "text-[#44DDA0]"
+                      : "text-[#B23434]"
                   }`}
                 >
                   {evcar.battery}
@@ -139,33 +140,35 @@ const Stations = () => {
           </div>
           <div className="flex justify-between w-full">
             <div className=" text-[#575757] mt-5 flex flex-col justify-between ">
-              <div className="flex flex-col">
+              <div className="flex flex-col mt-2">
                 <div>EV</div>
                 <div className="flex gap-1 items-center">
                   <span className="text-3xl text-white">{evcar.car}</span>
                   {" h"}
                 </div>
               </div>
-              <div className="flex flex-col">
+              <div className="flex flex-col mt-2">
                 <div>Battery Status</div>
                 <div className="flex gap-1 items-center">
                   <span
                     className={`text-3xl ${
-                      evcar.status === 'Good' ? "text-[#44DDA0]" : "text-[#B23434]"
+                      evcar.status === "Good"
+                        ? "text-[#44DDA0]"
+                        : "text-[#B23434]"
                     }`}
                   >
                     {evcar.status}
                   </span>
                 </div>
               </div>
-              <div className="flex flex-col">
+              <div className="flex flex-col mt-2">
                 <div>Range</div>
                 <div className="flex gap-1 items-center">
                   <span className="text-3xl text-white">{evcar.range}</span>
                   {" miles"}
                 </div>
               </div>
-              <div className="flex flex-col">
+              <div className="flex flex-col mt-2">
                 <div>Temp</div>
                 <div className="flex gap-1 items-center">
                   <span className="text-3xl text-white">{evcar.temp}</span>
@@ -174,7 +177,7 @@ const Stations = () => {
               </div>
             </div>
             <div className=" text-[#575757] mt-5 flex flex-col w-full text-right ">
-              <div className="flex flex-col">
+              <div className="flex flex-col py-4">
                 <div>Time left</div>
                 <div className="flex gap-1 items-center justify-end">
                   <span className="text-3xl text-white">{evcar.time}</span>
@@ -192,12 +195,22 @@ const Stations = () => {
                   </span>
                   {" %"}
                 </div>
-               
               </div>
               <img src={Car} alt="map" className="h-36" />
-            </div> 
+            </div>
           </div>
-          
+
+          <div className="w-full text-[#575757] mt-5 flex  justify-between items-center">
+            <div className="flex flex-col">
+              <div>Average Time</div>
+              <div className="flex gap-1 items-center">
+                <span className="text-3xl text-white">{evcar.time}</span>
+                {" min"}
+              </div>
+            </div>
+            {/* <Line/> */}
+            
+          </div>
         </div>
       </div>
     </div>
