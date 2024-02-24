@@ -40,11 +40,13 @@ const Login = ({ setAuthType, setUser }) => {
 
   return (
     <div className="h-full w-full px-8 flex flex-col justify-center items-center">
-      <div className="w-full px-8 text-2xl font-bold">Sign In</div>
+      <div className="w-full px-8 text-[#44DDA0] text-2xl font-bold">
+        Sign In
+      </div>
       <div className="w-full mt-5 text-gray-400 px-8 text-sm">
         If you don't have an account
       </div>
-      <div className="w-full mt-1 text-sm px-8 font-semibold text-[#0C21C1]">
+      <div className="w-full mt-1 text-sm px-8 font-semibold text-[#44DDA0]">
         <div
           className="cursor-pointer hover:underline w-fit"
           onClick={() => {
@@ -58,7 +60,7 @@ const Login = ({ setAuthType, setUser }) => {
         <div className="text-xs text-gray-400 w-full px-4">Email</div>
         <div
           className={`w-full h-full transition-all duration-200 border-b-2 flex gap-2 py-2 rounded-lg ${
-            isActive === "email" ? "border-[#0C21C1]" : "border-gray-100"
+            isActive === "email" ? "border-[#44DDA0]" : "border-gray-100"
           }`}
           onClick={() => {
             setIsActive("email");
@@ -70,7 +72,7 @@ const Login = ({ setAuthType, setUser }) => {
               name="email"
               width="20"
               height="20"
-              color={isActive === "email" ? "#0C21C1" : "#676767"}
+              color={isActive === "email" ? "#44DDA0" : "#676767"}
             />
           </div>
           <input
@@ -85,7 +87,7 @@ const Login = ({ setAuthType, setUser }) => {
         <div className="text-xs text-gray-400 w-full px-4">Password</div>
         <div
           className={`w-full h-full transition-all duration-200 border-b-2 flex gap-2 py-2 rounded-lg ${
-            isActive === "password" ? "border-[#0C21C1]" : "border-gray-100"
+            isActive === "password" ? "border-[#44DDA0]" : "border-gray-100"
           }`}
           onClick={() => {
             setIsActive("password");
@@ -97,7 +99,7 @@ const Login = ({ setAuthType, setUser }) => {
               name="password"
               width="20"
               height="20"
-              color={isActive === "password" ? "#0C21C1" : "#676767"}
+              color={isActive === "password" ? "#44DDA0" : "#676767"}
             />
           </div>
           <input
