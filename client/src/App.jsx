@@ -29,6 +29,7 @@ const App = () => {
           .then((res) => {
             let s = { ...d, evs: res.data };
             setEVData(res.data);
+            localStorage.setItem("data", JSON.stringify(s));
             setData(s);
           })
           .catch((err) => {
@@ -39,10 +40,6 @@ const App = () => {
         console.log(err);
       });
   };
-
-  useEffect(() => {
-    console.log("Data", data);
-  }, [data]);
 
   useEffect(() => {
     if (localStorage.getItem("user")) {

@@ -34,13 +34,24 @@ const ProgressBar = ({ title, value, max, gasEqual }) => {
   );
 };
 
-const Dashboard = ({ data }) => {
-  const [evcar, setEvcar] = useState({
-    car: "Nissan",
-    battery: 40,
-    time: "5:21",
-    powerReserve: 400,
-  });
+const Dashboard = () => {
+  const data = JSON.parse(localStorage.getItem("data"));
+  const cars = data?.evs;
+  const [evcar, setEvcar] = useState(cars ? cars[0] : null);
+
+  // const getCarData = async () => {
+  //   const userId = JSON.parse(localStorage.getItem("user"))?.id;
+  //   axios
+  //     .get(`http://localhost:5000/evs/${userId}`)
+  //     .then((res) => {
+  //       setCars(res.data);
+  //       setEvcar(res.data[0]);
+  //     })
+  //     .catch((err) => {
+  //       toast.error("Failed to fetch car data");
+  //     });
+  // };
+
   const [gasSavings, setGasSavings] = useState("Year");
   const [showGasSavingsDropdown, setShowGasSavingsDropdown] = useState(false);
   const [charge, setCharge] = useState("Year");
@@ -96,7 +107,6 @@ const Dashboard = ({ data }) => {
       })
         .then(async (res) => {
           const data = await res.json();
-          console.log(data.places);
           setGoogleStations(data.places);
         })
         .catch((error) => {
@@ -228,7 +238,7 @@ const Dashboard = ({ data }) => {
       (batteryPercentage / 100) * (powerReserve / consumptionRate);
     return timeRemaining.toFixed(2); // return time remaining in hours with two decimal places
   };
-  const chargingWidth = `${evcar.battery}%`;
+  const chargingWidth = `${evcar.evBatteryCapacity}%`;
   const calculateUsingPrivate = (powerConsumption, electricityCost) => {
     return (powerConsumption * electricityCost).toFixed(2); // Returns the cost in dollars
   };
@@ -246,19 +256,19 @@ const Dashboard = ({ data }) => {
   const emissionFactor = 0.5; // kgCO2/kWh (example value)
 
   const usingPrivateCost = calculateUsingPrivate(
-    evcar.powerReserve,
+    evcar.evPowerReserve,
     electricityCost
   );
-  const fuelSaved = calculateCO2Saved(evcar.powerReserve, emissionFactor);
+  const fuelSaved = calculateCO2Saved(evcar.evPowerReserve, emissionFactor);
 
   useEffect(() => {
     // Update the time remaining whenever the battery or type of vehicle changes
     const timeRemaining = calculateTimeRemaining(
-      evcar.battery,
-      evcar.powerReserve
+      evcar.evBatteryCapacity,
+      evcar.evPowerReserve
     );
     setEvcar((prevState) => ({ ...prevState, time: timeRemaining }));
-  }, [evcar.battery, evcar.car, evcar.powerReserve]);
+  }, [evcar.evBatteryCapacity, evcar.evName, evcar.evPowerReserve]);
 
   return (
     <div className="w-full gap-4 h-fit overflow-y-auto flex flex-col justify-center items-center">
@@ -267,7 +277,7 @@ const Dashboard = ({ data }) => {
         <div className="w-full items-center justify-between flex">
           <div className="text-lg font-semibold">EV cars</div>
           <div className="flex justify-center items-center gap-4">
-            <div
+            {/* <div
               className={`transition-all cursor-pointer duration-200 ${
                 evcar.car === "Nissan" ? "text-[#44DDA0]" : "text-[#575757]"
               }`}
@@ -296,7 +306,25 @@ const Dashboard = ({ data }) => {
               }}
             >
               {data?.evName}
-            </div>
+            </div> */}
+            {cars?.map((car, index) => {
+              return (
+                <div
+                  key={index}
+                  className={`transition-all cursor-pointer duration-200 ${
+                    evcar.evName === car.evName
+                      ? "text-[#44DDA0]"
+                      : "text-[#575757]"
+                  }`}
+                  onClick={() => {
+                    let d = JSON.parse(localStorage.getItem("data"))?.evs;
+                    setEvcar(d?.filter((c) => c.evName === car.evName)[0]);
+                  }}
+                >
+                  {car.evName}
+                </div>
+              );
+            })}
           </div>
         </div>
         <div className="w-full text-[#575757] mt-5 flex justify-between items-center">
@@ -312,10 +340,12 @@ const Dashboard = ({ data }) => {
             <div className="flex gap-1 items-center">
               <span
                 className={`text-3xl ${
-                  evcar.battery > 50 ? "text-[#44DDA0]" : "text-[#B23434]"
+                  evcar.evBatteryCapacity > 50
+                    ? "text-[#44DDA0]"
+                    : "text-[#B23434]"
                 }`}
               >
-                {evcar.battery}
+                {evcar.evBatteryCapacity}
               </span>
               {" %"}
             </div>
@@ -323,7 +353,9 @@ const Dashboard = ({ data }) => {
           <div className="flex flex-col">
             <div>Power Reserve</div>
             <div className="flex gap-1 items-center">
-              <span className="text-3xl text-white">{evcar.powerReserve}</span>
+              <span className="text-3xl text-white">
+                {evcar.evPowerReserve}
+              </span>
               {" km"}
             </div>
           </div>
@@ -432,7 +464,7 @@ const Dashboard = ({ data }) => {
               {charge}
             </div> */}
             {/* {showChargeDropdown && ( */}
-             
+
             {/* )} */}
           </div>
         </div>
@@ -471,7 +503,6 @@ const Dashboard = ({ data }) => {
               {" hr"}
             </div>
           </div>
-         
         </div>
         <StackedBar />
       </div>
