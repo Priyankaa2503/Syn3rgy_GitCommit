@@ -3,6 +3,7 @@ import Icons from "../Icons";
 import Button from "./Button";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import axios from "axios";
 
 const Register = ({ setAuthType, setUser }) => {
   const [isActive, setIsActive] = useState("");
@@ -16,6 +17,8 @@ const Register = ({ setAuthType, setUser }) => {
   const [password, setPassword] = useState("");
   const [rePassword, setRePassword] = useState("");
 
+  const navigate = useNavigate();
+
   const handleRegister = () => {
     if (!name || !email || !password || !rePassword) {
       return toast.error("Please fill all the fields");
@@ -23,6 +26,22 @@ const Register = ({ setAuthType, setUser }) => {
     if (password !== rePassword) {
       return toast.error("Passwords do not match");
     }
+    axios
+      .post("http://localhost:5000/auth/register", {
+        name,
+        email,
+        password,
+        isAdmin: false,
+      })
+      .then((res) => {
+        setUser(res.data);
+        localStorage.setItem("user", JSON.stringify(res.data));
+        toast.success("Registered successfully");
+        navigate("/");
+      })
+      .catch((err) => {
+        toast.error("Invalid credentials");
+      });
   };
 
   useEffect(() => {
@@ -50,7 +69,9 @@ const Register = ({ setAuthType, setUser }) => {
 
   return (
     <div className="h-full w-full flex px-8 flex-col justify-center items-center">
-      <div className="w-full px-8 text-2xl font-bold">Sign Up</div>
+      <div className="w-full px-8 text-2xl text-[#44DDA0] font-bold">
+        Sign Up
+      </div>
       <div className="w-full mt-5 text-gray-400 px-8 text-sm">
         If you already have an account
       </div>
