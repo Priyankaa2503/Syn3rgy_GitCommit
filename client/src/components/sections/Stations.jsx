@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { MdOutlineElectricBolt, MdCancelPresentation } from "react-icons/md";
-import Car from "../assets/Car.png";
+import Car from "../../assets/Car.png";
 import Line from "../../charts/Line";
 
 const Stations = () => {
