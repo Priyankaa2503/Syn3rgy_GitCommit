@@ -1,11 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  Account,
-  Dashboard,
-  MyTrips,
-  Stations,
-  SubscriptionPlan,
-} from "./sections";
+import { Dashboard, MyTrips, Stations, CarDetails } from "./sections";
 import Icons from "./Icons";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
@@ -14,14 +8,12 @@ const MainModule = ({ data, user, setUser, active, setIsLoggedIn }) => {
     switch (active) {
       case "Dashboard":
         return <Dashboard data={data} />;
-      case "Account":
-        return <Account />;
       case "Stations":
         return <Stations />;
       case "My Trips":
         return <MyTrips />;
-      case "Subscription Plan":
-        return <SubscriptionPlan />;
+      case "Car Details":
+        return <CarDetails />;
     }
   };
 
