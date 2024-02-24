@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { MdOutlineElectricBolt, MdCancelPresentation } from "react-icons/md";
 import Car from "../../assets/Car.png";
+import EV from "../../assets/evicon.png";
 import Line from "../../charts/Line";
 
 const Stations = () => {
@@ -17,8 +18,8 @@ const Stations = () => {
     price: 60,
     status: "Good",
   });
-  let map; 
-   const [places, setPlaces] = useState([]); // Add this line
+  let map;
+  const [places, setPlaces] = useState([]); // Add this line
   useEffect(() => {
     // Load the Google Maps script
     const script = document.createElement("script");
@@ -38,34 +39,112 @@ const Stations = () => {
     };
   }, []);
 
-
   function initMap() {
-     map = new google.maps.Map(document.getElementById("map"), {
+    map = new google.maps.Map(document.getElementById("map"), {
       zoom: 16,
+      // styles: [
+    //     { elementType: "geometry", stylers: [{ color: "#242f3e" }] },
+    //     { elementType: "labels.text.stroke", stylers: [{ color: "#242f3e" }] },
+    //     { elementType: "labels.text.fill", stylers: [{ color: "#746855" }] },
+    //     {
+    //       featureType: "administrative.locality",
+    //       elementType: "labels.text.fill",
+    //       stylers: [{ color: "#d59563" }],
+    //     },
+    //     {
+    //       featureType: "poi",
+    //       elementType: "labels.text.fill",
+    //       stylers: [{ color: "#d59563" }],
+    //     },
+    //     {
+    //       featureType: "poi.park",
+    //       elementType: "geometry",
+    //       stylers: [{ color: "#263c3f" }],
+    //     },
+    //     {
+    //       featureType: "poi.park",
+    //       elementType: "labels.text.fill",
+    //       stylers: [{ color: "#6b9a76" }],
+    //     },
+    //     {
+    //       featureType: "road",
+    //       elementType: "geometry",
+    //       stylers: [{ color: "#38414e" }],
+    //     },
+    //     {
+    //       featureType: "road",
+    //       elementType: "geometry.stroke",
+    //       stylers: [{ color: "#212a37" }],
+    //     },
+    //     {
+    //       featureType: "road",
+    //       elementType: "labels.text.fill",
+    //       stylers: [{ color: "#9ca5b3" }],
+    //     },
+    //     {
+    //       featureType: "road.highway",
+    //       elementType: "geometry",
+    //       stylers: [{ color: "#746855" }],
+    //     },
+    //     {
+    //       featureType: "road.highway",
+    //       elementType: "geometry.stroke",
+    //       stylers: [{ color: "#1f2835" }],
+    //     },
+    //     {
+    //       featureType: "road.highway",
+    //       elementType: "labels.text.fill",
+    //       stylers: [{ color: "#f3d19c" }],
+    //     },
+    //     {
+    //       featureType: "transit",
+    //       elementType: "geometry",
+    //       stylers: [{ color: "#2f3948" }],
+    //     },
+    //     {
+    //       featureType: "transit.station",
+    //       elementType: "labels.text.fill",
+    //       stylers: [{ color: "#d59563" }],
+    //     },
+    //     {
+    //       featureType: "water",
+    //       elementType: "geometry",
+    //       stylers: [{ color: "#17263c" }],
+    //     },
+    //     {
+    //       featureType: "water",
+    //       elementType: "labels.text.fill",
+    //       stylers: [{ color: "#515c6d" }],
+    //     },
+    //     {
+    //       featureType: "water",
+    //       elementType: "labels.text.stroke",
+    //       stylers: [{ color: "#17263c" }],
+    //     },
+    //   ],
       center: { lat: 37.7937, lng: -122.3965 },
     });
 
-    new google.maps.Circle({
-      strokeColor: "#44DDA0",
-      strokeOpacity: 0.2,
-      strokeWeight: 2,
-      fillColor: "#44DDA0",
-      fillOpacity: 0.35,
-      map,
-      center: { lat: 37.7937, lng: -122.3965 },
-      radius: 500,
+    new google.maps.Marker({
+      position: { lat: 37.7937, lng: -122.3965 },
+      map: map,
+       icon: {
+         url: "http://maps.google.com/mapfiles/ms/icons/red-dot.png",
+       },
     });
-     
   }
 
- function addMarker (coords)  {  
+  function addMarker(coords) {
     console.log("Adding marker at:", coords);
-   var marker = new google.maps.Marker({
-     position: coords,
-     map: map,
-   });
-  };
-
+    var marker = new google.maps.Marker({
+      position: coords,
+      map: map,
+      icon: {
+        url: EV,
+        scaledSize: new google.maps.Size(50, 70), // This line sets the icon size to 20x20 pixels
+      },
+    });
+  }
   const getNearbyStations = (userLocation, map) => {
     const url = "https://places.googleapis.com/v1/places:searchNearby";
     const apiKey = "AIzaSyAGHFR3hfwbf_yGyfkPFZ7aSfj7Jr7RDfg"; // replace with your API key
@@ -97,7 +176,10 @@ const Stations = () => {
       .then((data) => {
         console.log("API Response:", data);
         data.places.forEach((place) => {
-          addMarker({ lat: place.location.latitude, lng: place.location.longitude });
+          addMarker({
+            lat: place.location.latitude,
+            lng: place.location.longitude,
+          });
         });
       })
       .catch((error) => {
