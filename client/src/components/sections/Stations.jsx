@@ -105,17 +105,15 @@ const Stations = () => {
             <div className="flex flex-col">
               <div>EV</div>
               <div className="flex gap-1 items-center">
-                <span className="text-3xl text-white">{evcar.car}</span>
+                <span className="text-2xl text-white">{evcar.car}</span>
               </div>
             </div>
             <div className="flex flex-col">
-              <div>Battery Status</div>
+              <div>Battery </div>
               <div className="flex gap-1 items-center">
                 <span
-                  className={`text-3xl ${
-                    evcar.battery === "Good"
-                      ? "text-[#44DDA0]"
-                      : "text-[#B23434]"
+                  className={`text-2xl ${
+                    evcar.battery > 80 ? "text-[#44DDA0]" : "text-[#B23434]"
                   }`}
                 >
                   {evcar.battery}
@@ -126,19 +124,19 @@ const Stations = () => {
             <div className="flex flex-col">
               <div>Range</div>
               <div className="flex gap-1 items-center">
-                <span className="text-3xl text-white">{evcar.range}</span>
+                <span className="text-2xl text-white">{evcar.range}</span>
                 {" miles"}
               </div>
             </div>
             <div className="flex flex-col">
               <div>Temp</div>
               <div className="flex gap-1 items-center">
-                <span className="text-3xl text-white">{evcar.temp}</span>
+                <span className="text-2xl text-white">{evcar.temp}</span>
                 {" F"}
               </div>
             </div>
           </div>
-          <div className="flex justify-between w-full">
+          <div className="flex justify-between w-full p-6">
             <div className=" text-[#575757] mt-5 flex flex-col justify-between ">
               <div className="flex flex-col mt-2">
                 <div>EV</div>

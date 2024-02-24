@@ -68,7 +68,7 @@ const Sidebar = ({ active, setActive }) => {
         <Link name="Stations" active={active} setActive={setActive} />
         <Link name="My Trips" active={active} setActive={setActive} />
         <Link name="Account" active={active} setActive={setActive} />
-        <Link name="Subscription Plan" active={active} setActive={setActive} />
+        {/* <Link name="Subscription Plan" active={active} setActive={setActive} /> */}
       </div>
       <div className="w-full p-5 flex flex-col gap-5">
         <div className="items-center w-full flex justify-between font-bold">
