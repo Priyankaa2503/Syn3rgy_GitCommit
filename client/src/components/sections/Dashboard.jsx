@@ -3,6 +3,8 @@ import Icons from "../Icons";
 import { MdOutlineElectricBolt } from "react-icons/md";
 import GasStation from "../../assets/teslaCity-a2bda4ca.png";
 import StackedBar from "../../charts/StackedBar";
+import axios from "axios";
+import toast from "react-hot-toast";
 
 const ProgressBar = ({ title, value, max, gasEqual }) => {
   const cells = [];
@@ -58,6 +60,36 @@ const Dashboard = ({ data }) => {
     fuelEfficiency,
     fuelCost
   );
+
+  const [stations, setStations] = useState([]);
+
+  const getStationDetails = async (stationId) => {
+    try {
+      const res = await axios.get(
+        `https://places.googleapis.com/v1/places/${stationId}?fields=id,displayName,formattedAddress&key=AIzaSyAGHFR3hfwbf_yGyfkPFZ7aSfj7Jr7RDfg`
+      );
+      return res.data;
+    } catch (err) {
+      toast.error("Failed to fetch station details");
+    }
+  };
+
+  const getStationsData = async () => {
+    try {
+      const res = await axios.get("http://localhost:5000/stations");
+      const stationPromises = res.data.map((station) =>
+        getStationDetails(station.stationId)
+      );
+      const stationDetails = await Promise.all(stationPromises);
+      setStations(stationDetails);
+    } catch (err) {
+      toast.error("Failed to fetch stations data");
+    }
+  };
+
+  useEffect(() => {
+    getStationsData();
+  }, []);
 
   // const stations = {
   //   favourite: [
@@ -129,16 +161,19 @@ const Dashboard = ({ data }) => {
   //   ],
   // };
 
-  const [stations, setStations] = useState([]);
   const [stationType, setStationType] = useState("Favourite");
   const [stationData, setStationData] = useState([]);
+
   useEffect(() => {
     if (stationType === "Favourite") {
-      setStationData(stations.favourite);
+      const topTwoStations = [...stations]
+        .sort((a, b) => b.noOfVisits - a.noOfVisits)
+        .slice(0, 2);
+      setStationData(topTwoStations);
     } else {
-      setStationData(stations.all);
+      setStationData(stations);
     }
-  }, [stationType]);
+  }, [stations, stationType]);
 
   const calculateTimeRemaining = (batteryPercentage, powerReserve) => {
     const consumptionRate = 10; // 10 km per hour
@@ -461,9 +496,11 @@ const Dashboard = ({ data }) => {
               </div>
               <div className="flex w-full items-start flex-col gap-3">
                 <div className="flex flex-col">
-                  <div className="font-semibold">{station.name}</div>
+                  <div className="font-semibold">
+                    {station?.displayName?.text}
+                  </div>
                   <div className="text-[#575757] text-xs">
-                    {station.location}
+                    {station.formattedAddress}
                   </div>
                 </div>
                 <div className="flex flex-col gap-1">

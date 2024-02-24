@@ -36,9 +36,9 @@ router.post("/register", async (req, res) => {
                   res.status(500).send("Error fetching user");
                 } else {
                   res.status(200).send({
-                    id: userResults[0].id,
-                    name: userResults[0].name,
-                    email: userResults[0].email,
+                    id: userResults[0]?.id,
+                    name: userResults[0]?.name,
+                    email: userResults[0]?.email,
                   });
                 }
               }
@@ -61,9 +61,9 @@ router.post("/login", (req, res) => {
         res.status(500).send("Error logging user in");
       } else {
         res.status(200).send({
-          id: results[0].id,
-          name: results[0].name,
-          email: results[0].email,
+          id: results[0]?.id,
+          name: results[0]?.name,
+          email: results[0]?.email,
         });
       }
     }

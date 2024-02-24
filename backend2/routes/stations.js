@@ -44,4 +44,19 @@ router.get("/:id", (req, res) => {
   );
 });
 
+router.patch("/:id", (req, res) => {
+  const { stationId, noOfVisits } = req.body;
+  db.query(
+    "UPDATE stations SET stationId = ?, noOfVisits = ? WHERE id = ?",
+    [stationId, noOfVisits, req.params.id],
+    (error, results) => {
+      if (error) {
+        res.status(500).send("Error updating station");
+      } else {
+        res.status(200).send({ id: req.params.id, stationId, noOfVisits });
+      }
+    }
+  );
+});
+
 module.exports = router;

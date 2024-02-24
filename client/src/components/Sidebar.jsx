@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Icons from "./Icons";
 import Car from "../assets/Car.png";
 import AddEVModal from "./AddEVModal";
@@ -53,7 +53,7 @@ const CarCard = ({ car, model, battery, range }) => {
   );
 };
 
-const Sidebar = ({ data, active, setActive }) => {
+const Sidebar = ({ data, getData, active, setActive }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleOpenModal = () => {
@@ -63,6 +63,7 @@ const Sidebar = ({ data, active, setActive }) => {
   const handleCloseModal = () => {
     setIsModalOpen(false);
   };
+
   return (
     <div className="w-96 overflow-x-hidden relative bg-[#141414] overflow-y-auto h-full">
       <div className="text-2xl gap-2 py-16 w-full flex items-center justify-center">
@@ -91,13 +92,19 @@ const Sidebar = ({ data, active, setActive }) => {
           </div>
         </div>
         <CarCard car="Nissan" model="Model 3" battery={23} range="300 mi" />
-        <CarCard
-          car={data?.evName}
-          model={data?.evModel}
-          battery={data?.evBatteryCapacity}
-          range={data?.evRange}
+        {data?.evName !== null && (
+          <CarCard
+            car={data?.evName}
+            model={data?.evModel}
+            battery={data?.evBatteryCapacity}
+            range={data?.evRange}
+          />
+        )}
+        <AddEVModal
+          isOpen={isModalOpen}
+          getData={getData}
+          onClose={handleCloseModal}
         />
-        <AddEVModal isOpen={isModalOpen} onClose={handleCloseModal} />
       </div>
     </div>
   );
