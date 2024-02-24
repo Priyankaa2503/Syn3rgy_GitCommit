@@ -91,15 +91,19 @@ const Sidebar = ({ data, getData, active, setActive }) => {
             <Icons name="add" width={20} height={20} color="white" />
           </div>
         </div>
-        <CarCard car="Nissan" model="Model 3" battery={23} range="300 mi" />
-        {data?.evName !== null && (
-          <CarCard
-            car={data?.evName}
-            model={data?.evModel}
-            battery={data?.evBatteryCapacity}
-            range={data?.evRange}
-          />
-        )}
+        {/* <CarCard car="Nissan" model="Model 3" battery={23} range="300 mi" /> */}
+        {data?.evs !== null &&
+          data?.evs?.map((ev, idx) => {
+            return (
+              <CarCard
+                key={idx}
+                car={ev.evName}
+                model={ev.evModel}
+                battery={ev.evPowerReserve}
+                range={ev.evRange}
+              />
+            );
+          })}
         <AddEVModal
           isOpen={isModalOpen}
           getData={getData}

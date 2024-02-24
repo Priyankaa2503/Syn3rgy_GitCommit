@@ -3,11 +3,15 @@ import { Sidebar, MainModule } from "./components";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import AuthModule from "./components/auth/AuthModule";
 import axios from "axios";
+import toast from "react-hot-toast";
 
 const App = () => {
   const [active, setActive] = useState("Dashboard");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState(null);
+
+  const [userData, setUserData] = useState(null);
+  const [evData, setEVData] = useState(null);
 
   const [data, setData] = useState(null);
 
@@ -17,12 +21,27 @@ const App = () => {
     axios
       .get(`http://localhost:5000/user/${id}`)
       .then((res) => {
-        setData(res.data);
+        let d = res.data;
+        setUserData(res.data);
+        axios
+          .get(`http://localhost:5000/evs/${id}`)
+          .then((res) => {
+            let s = { ...d, evs: res.data };
+            setEVData(res.data);
+            setData(s);
+          })
+          .catch((err) => {
+            toast.error("Failed to fetch EV data");
+          });
       })
       .catch((err) => {
         console.log(err);
       });
   };
+
+  useEffect(() => {
+    console.log("Data", data);
+  }, [data]);
 
   useEffect(() => {
     if (localStorage.getItem("user")) {

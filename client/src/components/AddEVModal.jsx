@@ -23,10 +23,10 @@ const AddEVModal = ({ isOpen, getData, onClose }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Here you can handle submitting the form data
-    console.log(formData);
+    const userid = JSON.parse(localStorage.getItem("user"))?.id;
     axios
-      .patch("http://localhost:5000/user/1", {
+      .post(`http://localhost:5000/evs`, {
+        userId: userid,
         evName: formData.evName,
         evModel: formData.evModel,
         evYear: parseInt(formData.evYear),

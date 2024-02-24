@@ -15,35 +15,4 @@ router.get("/:id", (req, res) => {
   });
 });
 
-router.patch("/:id", async (req, res) => {
-  const userId = req.params.id;
-  const {
-    evName,
-    evModel,
-    evYear,
-    evBatteryCapacity,
-    evRange,
-    evPowerReserve,
-    evChargingConnector,
-  } = req.body;
-
-  const result = await db.query(
-    "UPDATE users SET evName = ?, evModel = ?, evYear = ?, evBatteryCapacity = ?, evRange = ?, evPowerReserve = ?, evChargingConnector = ? WHERE id = ?",
-    [
-      evName,
-      evModel,
-      evYear,
-      evBatteryCapacity,
-      evRange,
-      evPowerReserve,
-      evChargingConnector,
-      userId,
-    ]
-  );
-  if (result.affectedRows === 0) {
-    return res.status(404).json({ message: "User not found" });
-  }
-  res.json({ message: "User updated successfully" });
-});
-
 module.exports = router;
