@@ -44,75 +44,6 @@ const Dashboard = ({ data }) => {
   const [charge, setCharge] = useState("Year");
   const [showChargeDropdown, setChargeDropdown] = useState(false);
 
-  const stations = {
-    favourite: [
-      {
-        name: "Tesla Station",
-        location: "1780 N Beale Rd, Marysville",
-        ports: 4,
-        parkingFee: 0.1,
-        power: 0.5,
-        arrivalTime: "Today, 12:00",
-        departureTime: "Today, 15:00",
-      },
-      {
-        name: "Tesla Station",
-        location: "1780 N Beale Rd, Marysville",
-        ports: 4,
-        parkingFee: 0.1,
-        power: 0.5,
-        arrivalTime: "Today 12:00",
-        departureTime: "Today, 15:00",
-      },
-    ],
-    all: [
-      {
-        name: "Tesla Station",
-        location: "1780 N Beale Rd, Marysville",
-        ports: 4,
-        parkingFee: 0.1,
-        power: 0.5,
-        arrivalTime: "Today 12:00",
-        departureTime: "Today, 15:00",
-      },
-      {
-        name: "Tesla Station",
-        location: "1780 N Beale Rd, Marysville",
-        ports: 4,
-        parkingFee: 0.1,
-        power: 0.5,
-        arrivalTime: "Today 12:00",
-        departureTime: "Today, 15:00",
-      },
-      {
-        name: "Tesla Station",
-        location: "1780 N Beale Rd, Marysville",
-        ports: 4,
-        parkingFee: 0.1,
-        power: 0.5,
-        arrivalTime: "Today 12:00",
-        departureTime: "Today, 15:00",
-      },
-      {
-        name: "Tesla Station",
-        location: "1780 N Beale Rd, Marysville",
-        ports: 4,
-        parkingFee: 0.1,
-        power: 0.5,
-        arrivalTime: "Today 12:00",
-        departureTime: "Today, 15:00",
-      },
-      {
-        name: "Tesla Station",
-        location: "1780 N Beale Rd, Marysville",
-        ports: 4,
-        parkingFee: 0.1,
-        power: 0.5,
-        arrivalTime: "Today 12:00",
-        departureTime: "Today, 15:00",
-      },
-    ],
-  };
   const calculateGasSavings = (distanceTraveled, fuelEfficiency, fuelCost) => {
     const fuelConsumed = distanceTraveled / fuelEfficiency;
     const savedMoney = fuelConsumed * fuelCost;
@@ -127,6 +58,78 @@ const Dashboard = ({ data }) => {
     fuelEfficiency,
     fuelCost
   );
+
+  // const stations = {
+  //   favourite: [
+  //     {
+  //       name: "Tesla Station",
+  //       location: "1780 N Beale Rd, Marysville",
+  //       ports: 4,
+  //       parkingFee: 0.1,
+  //       power: 0.5,
+  //       arrivalTime: "Today, 12:00",
+  //       departureTime: "Today, 15:00",
+  //     },
+  //     {
+  //       name: "Tesla Station",
+  //       location: "1780 N Beale Rd, Marysville",
+  //       ports: 4,
+  //       parkingFee: 0.1,
+  //       power: 0.5,
+  //       arrivalTime: "Today 12:00",
+  //       departureTime: "Today, 15:00",
+  //     },
+  //   ],
+  //   all: [
+  //     {
+  //       name: "Tesla Station",
+  //       location: "1780 N Beale Rd, Marysville",
+  //       ports: 4,
+  //       parkingFee: 0.1,
+  //       power: 0.5,
+  //       arrivalTime: "Today 12:00",
+  //       departureTime: "Today, 15:00",
+  //     },
+  //     {
+  //       name: "Tesla Station",
+  //       location: "1780 N Beale Rd, Marysville",
+  //       ports: 4,
+  //       parkingFee: 0.1,
+  //       power: 0.5,
+  //       arrivalTime: "Today 12:00",
+  //       departureTime: "Today, 15:00",
+  //     },
+  //     {
+  //       name: "Tesla Station",
+  //       location: "1780 N Beale Rd, Marysville",
+  //       ports: 4,
+  //       parkingFee: 0.1,
+  //       power: 0.5,
+  //       arrivalTime: "Today 12:00",
+  //       departureTime: "Today, 15:00",
+  //     },
+  //     {
+  //       name: "Tesla Station",
+  //       location: "1780 N Beale Rd, Marysville",
+  //       ports: 4,
+  //       parkingFee: 0.1,
+  //       power: 0.5,
+  //       arrivalTime: "Today 12:00",
+  //       departureTime: "Today, 15:00",
+  //     },
+  //     {
+  //       name: "Tesla Station",
+  //       location: "1780 N Beale Rd, Marysville",
+  //       ports: 4,
+  //       parkingFee: 0.1,
+  //       power: 0.5,
+  //       arrivalTime: "Today 12:00",
+  //       departureTime: "Today, 15:00",
+  //     },
+  //   ],
+  // };
+
+  const [stations, setStations] = useState([]);
   const [stationType, setStationType] = useState("Favourite");
   const [stationData, setStationData] = useState([]);
   useEffect(() => {
@@ -444,7 +447,7 @@ const Dashboard = ({ data }) => {
           </div>
         </div>
         <div className="w-full mt-5 gap-3 flex flex-col h-full">
-          {stationData.map((station, index) => (
+          {stationData?.map((station, index) => (
             <div
               key={index}
               className="w-full p-4 my-2 shadow-md shadow-[#00000040] rounded-xl bg-[#0F0F0F] flex justify-between items-center"
