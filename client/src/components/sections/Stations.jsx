@@ -27,7 +27,7 @@ const Stations = () => {
   const [estimatedDistance, setEstimatedDistance] = useState("");
   const [filteredStations, setFilteredStations] = useState([]);
   const [selectedFilters, setSelectedFilters] = useState([]);
-  
+
   useEffect(() => {
     // Load the Google Maps script
     const script = document.createElement("script");
@@ -195,92 +195,112 @@ const Stations = () => {
   };
 
   return (
-    <div style={{ position: "relative" }}>
-      <div id="map" style={{ height: "900px", width: "100%" }}></div>
-      <div
-        style={{
-          position: "absolute",
-          top: 0,
-          left: 0,
-          width: "33.33%",
-          height: "900px",
-          overflow: "auto",
-          color: "black",
-          backgroundColor: "rgba(255, 255, 255, 0.8)",
-        }}
-      >
-        <div>
-          <p>Estimated Time: {estimatedTime}</p>
-          <p>Estimated Distance: {estimatedDistance}</p>
+    <div>
+      <div style={{ position: "relative" }}>
+        <div id="map" style={{ height: "900px", width: "100%" }}></div>
+        <div
+          style={{
+            position: "absolute",
+            top: 36,
+            right: 12,
+            // width: "33.33%",
+            // height: "",
+            overflow: "auto",
+            color: "black",
+            backgroundColor: "rgba(0,0,0)",
+          }}
+          className="rounded-xl p-4 "
+        >
+          <p className="text-white">
+            Estimated Time:{" "}
+            <span className="text-[#44dba0]">{estimatedTime}</span>
+          </p>
+          <p className="text-white">
+            Estimated Distance:{" "}
+            <span className="text-[#44dba0]">{estimatedDistance}</span>
+          </p>
         </div>
-        {stations?.map((station, index) => (
-          <div
-            className="text-white p-5 rounded-md overflow-x-hidden flex flex-col  bg-black border-2 border-white"
-            key={index}
-          >
-            <div className="flex justify-between items-center">
-              <a
-                className="mt-2 font-medium text-md"
-                href={station?.websiteUri}
-              >
-                {station?.displayName?.text}
-              </a>
-              <p className="text-[#44dba0] flex">
-                <RiGasStationFill className="mr-2" size={24} />
-                {station?.evChargeOptions?.connectorCount}
-              </p>
-            </div>
-            <p className="my-2 text-[#575757] font-medium text-sm">
-              {formatPrimaryType(station?.primaryType)}
-            </p>{" "}
-            <div className="flex items-center">
-              <BsLightningChargeFill
-                className="mr-2 text-[#44dba0]"
-                size={20}
-              />
-              <p className="">{station?.formattedAddress}</p>
-            </div>
-            <p>{station?.currentOpeningHours?.openNow}</p>
-            <p className="my- text-[#44dba0]">Open 24 Hours</p>
-            <div className="flex items-center">
-              <FaPhoneAlt size={16} />
-              <p className="my-2 ml-2">{station?.internationalPhoneNumber}</p>
-            </div>
-            {/* <p>{station?.websiteUri}</p> */}
-            {station?.evChargeOptions?.connectorAggregation?.map(
-              (connector, i) => (
-                <div key={i} className="bg-gray-800 p-4 rounded-md mb-4">
-                  <p className="text-[#44dba0]">
-                    Type: {formatPrimaryType(connector.type)}
-                  </p>
-                  <p className="text-[#44dba0]">
-                    Max Charge Rate: {connector.maxChargeRateKw} kW
-                  </p>
-                  {connector.availabilityLastUpdateTime && (
-                    <p className="text-white text-sm">
-                      Last Update Time: {connector.availabilityLastUpdateTime}
-                    </p>
-                  )}
-                </div>
-              )
-            )}
-            <button
-              type="submit"
-              className="bg-[#44dba0] text-white rounded-md px-4 py-2 mr-2"
-              onClick={() =>
-                getDirections(
-                  { latitude: 37.7937, longitude: -122.3965 },
-                  {
-                    latitude: station?.location?.latitude,
-                    longitude: station?.location?.longitude,
-                  }
-                )
-              }
+        <div
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            width: "33.33%",
+            height: "900px",
+            overflow: "auto",
+            color: "black",
+            backgroundColor: "rgba(255, 255, 255, 0.8)",
+          }}
+        >
+          {stations?.map((station, index) => (
+            <div
+              className="text-white p-5 rounded-md overflow-x-hidden flex flex-col  bg-black border-2 border-white"
+              key={index}
             >
-              Get Directions
-            </button>
-          </div>
-        ))}
+              <div className="flex justify-between items-center">
+                <a
+                  className="mt-2 font-medium text-md"
+                  href={station?.websiteUri}
+                >
+                  {station?.displayName?.text}
+                </a>
+                <p className="text-[#44dba0] flex">
+                  <RiGasStationFill className="mr-2" size={24} />
+                  {station?.evChargeOptions?.connectorCount}
+                </p>
+              </div>
+              <p className="my-2 text-[#575757] font-medium text-sm">
+                {formatPrimaryType(station?.primaryType)}
+              </p>{" "}
+              <div className="flex items-center">
+                <BsLightningChargeFill
+                  className="mr-2 text-[#44dba0]"
+                  size={20}
+                />
+                <p className="">{station?.formattedAddress}</p>
+              </div>
+              <p>{station?.currentOpeningHours?.openNow}</p>
+              <p className="my- text-[#44dba0]">Open 24 Hours</p>
+              <div className="flex items-center">
+                <FaPhoneAlt size={16} />
+                <p className="my-2 ml-2">{station?.internationalPhoneNumber}</p>
+              </div>
+              {/* <p>{station?.websiteUri}</p> */}
+              {station?.evChargeOptions?.connectorAggregation?.map(
+                (connector, i) => (
+                  <div key={i} className="bg-gray-800 p-4 rounded-md mb-4">
+                    <p className="text-[#44dba0]">
+                      Type: {formatPrimaryType(connector.type)}
+                    </p>
+                    <p className="text-[#44dba0]">
+                      Max Charge Rate: {connector.maxChargeRateKw} kW
+                    </p>
+                    {connector.availabilityLastUpdateTime && (
+                      <p className="text-white text-sm">
+                        Last Update Time: {connector.availabilityLastUpdateTime}
+                      </p>
+                    )}
+                  </div>
+                )
+              )}
+              <button
+                type="submit"
+                className="bg-[#44dba0] text-white rounded-md px-4 py-2 mr-2"
+                onClick={() =>
+                  getDirections(
+                    { latitude: 37.7937, longitude: -122.3965 },
+                    {
+                      latitude: station?.location?.latitude,
+                      longitude: station?.location?.longitude,
+                    }
+                  )
+                }
+              >
+                Get Directions
+              </button>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
