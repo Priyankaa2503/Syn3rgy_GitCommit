@@ -11,18 +11,22 @@ const App = () => {
 
   const [data, setData] = useState(null);
 
+  const getData = () => {
+    const id = JSON.parse(localStorage.getItem("user"))?.id;
+    setUser(JSON.parse(localStorage.getItem("user")));
+    axios
+      .get(`http://localhost:5000/user/${id}`)
+      .then((res) => {
+        setData(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
   useEffect(() => {
     if (localStorage.getItem("user")) {
-      const id = JSON.parse(localStorage.getItem("user")).id;
-      setUser(JSON.parse(localStorage.getItem("user")));
-      axios
-        .get(`http://localhost:5000/user/${id}`)
-        .then((res) => {
-          setData(res.data);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+      getData();
       setIsLoggedIn(true);
     }
   }, []);
@@ -35,7 +39,12 @@ const App = () => {
             path="/"
             element={
               <div className="w-full h-full overflow-hidden flex items-center justify-center">
-                <Sidebar active={active} data={data} setActive={setActive} />
+                <Sidebar
+                  active={active}
+                  getData={getData}
+                  data={data}
+                  setActive={setActive}
+                />
                 <MainModule
                   user={user}
                   setUser={setUser}
