@@ -42,86 +42,6 @@ const Stations = () => {
   function initMap() {
     map = new google.maps.Map(document.getElementById("map"), {
       zoom: 16,
-      // styles: [
-    //     { elementType: "geometry", stylers: [{ color: "#242f3e" }] },
-    //     { elementType: "labels.text.stroke", stylers: [{ color: "#242f3e" }] },
-    //     { elementType: "labels.text.fill", stylers: [{ color: "#746855" }] },
-    //     {
-    //       featureType: "administrative.locality",
-    //       elementType: "labels.text.fill",
-    //       stylers: [{ color: "#d59563" }],
-    //     },
-    //     {
-    //       featureType: "poi",
-    //       elementType: "labels.text.fill",
-    //       stylers: [{ color: "#d59563" }],
-    //     },
-    //     {
-    //       featureType: "poi.park",
-    //       elementType: "geometry",
-    //       stylers: [{ color: "#263c3f" }],
-    //     },
-    //     {
-    //       featureType: "poi.park",
-    //       elementType: "labels.text.fill",
-    //       stylers: [{ color: "#6b9a76" }],
-    //     },
-    //     {
-    //       featureType: "road",
-    //       elementType: "geometry",
-    //       stylers: [{ color: "#38414e" }],
-    //     },
-    //     {
-    //       featureType: "road",
-    //       elementType: "geometry.stroke",
-    //       stylers: [{ color: "#212a37" }],
-    //     },
-    //     {
-    //       featureType: "road",
-    //       elementType: "labels.text.fill",
-    //       stylers: [{ color: "#9ca5b3" }],
-    //     },
-    //     {
-    //       featureType: "road.highway",
-    //       elementType: "geometry",
-    //       stylers: [{ color: "#746855" }],
-    //     },
-    //     {
-    //       featureType: "road.highway",
-    //       elementType: "geometry.stroke",
-    //       stylers: [{ color: "#1f2835" }],
-    //     },
-    //     {
-    //       featureType: "road.highway",
-    //       elementType: "labels.text.fill",
-    //       stylers: [{ color: "#f3d19c" }],
-    //     },
-    //     {
-    //       featureType: "transit",
-    //       elementType: "geometry",
-    //       stylers: [{ color: "#2f3948" }],
-    //     },
-    //     {
-    //       featureType: "transit.station",
-    //       elementType: "labels.text.fill",
-    //       stylers: [{ color: "#d59563" }],
-    //     },
-    //     {
-    //       featureType: "water",
-    //       elementType: "geometry",
-    //       stylers: [{ color: "#17263c" }],
-    //     },
-    //     {
-    //       featureType: "water",
-    //       elementType: "labels.text.fill",
-    //       stylers: [{ color: "#515c6d" }],
-    //     },
-    //     {
-    //       featureType: "water",
-    //       elementType: "labels.text.stroke",
-    //       stylers: [{ color: "#17263c" }],
-    //     },
-    //   ],
       center: { lat: 37.7937, lng: -122.3965 },
     });
 
@@ -134,17 +54,50 @@ const Stations = () => {
     });
   }
 
-  function addMarker(coords) {
-    console.log("Adding marker at:", coords);
-    var marker = new google.maps.Marker({
-      position: coords,
-      map: map,
-      icon: {
-        url: EV,
-        scaledSize: new google.maps.Size(50, 70), // This line sets the icon size to 20x20 pixels
-      },
-    });
-  }
+ function addMarker(station) {
+   console.log("Adding marker for station:", station);
+   var marker = new google.maps.Marker({
+     position: {
+       lat: station.location.latitude,
+       lng: station.location.longitude,
+     },
+     map: map,
+     icon: {
+       url: EV,
+       scaledSize: new google.maps.Size(50, 70),
+     },
+   });
+console.log(station.formattedAddress)
+var openDate = new Date();
+openDate.setHours(station?.currentOpeningHours?.periods[0]?.open?.hour);
+openDate.setMinutes(station?.currentOpeningHours?.periods[0]?.open?.minute);
+
+var closeDate = new Date();
+closeDate.setHours(station?.currentOpeningHours?.periods[0]?.close?.hour);
+closeDate.setMinutes(station?.currentOpeningHours?.periods[0]?.close?.minute);
+var infowindow = new google.maps.InfoWindow({
+  content: `<div style='height:100px; width:200px; color:black'>
+      ${station.formattedAddress}<br>
+      Open Now: ${station?.currentOpeningHours?.openNow}<br>
+      Open: Day ${station?.currentOpeningHours?.periods[0]?.open?.day}, Hour ${
+    station?.currentOpeningHours?.periods[0]?.open?.hour
+  }, Minute ${station?.currentOpeningHours?.periods[0]?.open?.minute}<br>
+      Close: Day ${
+        station?.currentOpeningHours?.periods[0]?.close?.day
+      }, Hour ${
+    station?.currentOpeningHours?.periods[0]?.close?.hour
+  }, Minute ${station?.currentOpeningHours?.periods[0]?.close?.minute}
+       Weekday Descriptions:<br>
+      ${station?.currentOpeningHours?.weekdayDescriptions?.join("<br>")}
+    </div>`,
+});
+
+
+ marker.addListener("click", function () {
+   infowindow.open(map, marker);
+   console.log(station.formattedAddress);
+ });
+ }
   const getNearbyStations = (userLocation, map) => {
     const url = "https://places.googleapis.com/v1/places:searchNearby";
     const apiKey = "AIzaSyAGHFR3hfwbf_yGyfkPFZ7aSfj7Jr7RDfg"; // replace with your API key
@@ -158,7 +111,7 @@ const Stations = () => {
             latitude: 37.7937,
             longitude: -122.3965,
           },
-          radius: 500.0,
+          radius: 200.0,
         },
       },
     };
@@ -176,10 +129,7 @@ const Stations = () => {
       .then((data) => {
         console.log("API Response:", data);
         data.places.forEach((place) => {
-          addMarker({
-            lat: place.location.latitude,
-            lng: place.location.longitude,
-          });
+          addMarker(place);
         });
       })
       .catch((error) => {
