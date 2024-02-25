@@ -8,6 +8,7 @@ import { BsLightningChargeFill } from "react-icons/bs";
 import { RiGasStationFill } from "react-icons/ri";
 import { FaPhoneAlt } from "react-icons/fa";
 import { AiFillStar, AiOutlineStar } from "react-icons/ai";
+import Icons from "../Icons";
 
 const Stations = () => {
   const [evcar, setEvcar] = useState({
@@ -125,6 +126,7 @@ const Stations = () => {
       },
     });
   }
+  const [currentDirection, setCurrentDirection] = useState("");
 
   function addMarker(station) {
     var marker = new google.maps.Marker({
@@ -257,17 +259,28 @@ const Stations = () => {
         setEstimatedTimeInTraffic(estimatedTimeInTraffic);
         setEstimatedDistance(estimatedDistance);
         directionsRenderer.setDirections(response);
+        for (let i = 0; i < route.legs[0].steps.length; i++) {
+          const step = route.legs[0].steps[i];
+          const text = step.instructions + " in " + step.distance.text;
+
+          // Use the SpeechSynthesis API to convert text to speech
+          const utterance = new SpeechSynthesisUtterance(text);
+          window.speechSynthesis.speak(utterance);
+
+          // Update the current direction
+          setCurrentDirection(text);
+        }
       } else {
         console.error("Error fetching directions:", status);
       }
     });
   };
 
-const [optimalStation, setOptimalStation] = useState(null);
+  const [optimalStation, setOptimalStation] = useState(null);
 
   function calculateOptimalPath() {
     // Calculate score for each station
-  console.log(stations);
+    console.log(stations);
     const stationsWithScore = stations?.map((station) => ({
       ...station,
       score: calculateScore(station),
@@ -280,30 +293,33 @@ const [optimalStation, setOptimalStation] = useState(null);
     return stationsWithScore[0];
   }
 
-function calculateScore(station) {
-  let score = 0;
-  station.evChargeOptions.connectorAggregation.forEach((connector) => {
-    score += station.evChargeOptions.connectorCount + connector.maxChargeRateKw;
-  });
+  function calculateScore(station) {
+    let score = 0;
+    station.evChargeOptions.connectorAggregation.forEach((connector) => {
+      score +=
+        station.evChargeOptions.connectorCount + connector.maxChargeRateKw;
+    });
 
-  // Subtract the distance from the score
-  score -= station.distance;
+    // Subtract the distance from the score
+    score -= station.distance;
 
-  return score;
-}
+    return score;
+  }
   useEffect(() => {
     if (stations.length > 0) {
       const optimalStation = calculateOptimalPath();
       setOptimalStation(optimalStation);
     }
   }, [stations]);
-  
+
   useEffect(() => {
-   console.log(optimalStation);
-  
-  
-  }, [optimalStation])
-  
+    console.log(optimalStation);
+  }, [optimalStation]);
+
+  const getRespomses = async () => {};
+
+  const [isActive, setIsActive] = useState("");
+
   return (
     <div className="w-full h-full">
       <div
@@ -418,8 +434,11 @@ function calculateScore(station) {
             </div>
           ))}
         </div>
+        <div className="absolute text-sm bottom-2 right-5 w-fit bg-black px-3 p-2">
+          <p>{currentDirection}</p>
+        </div>
       </div>
-        <p className="text-3xl mt-12">Suggested Optimal Path</p>
+      <p className="text-3xl mt-12">Suggested Optimal Path</p>
       <div className="flex gap-x-24 justify-center mt-8">
         <div className="flex flex-col gap-y-6">
           <div className="border p-6 border- rounded-xl ">
@@ -457,9 +476,7 @@ function calculateScore(station) {
                   )
                 )}
                 <div className="ml-2">Slots</div>
-                <span
-                  className={`text-3xl "text-[#44DDA0]"`}
-                >
+                <span className={`text-3xl "text-[#44DDA0]"`}>
                   {optimalStation?.evChargeOptions?.connectorCount}
                 </span>
               </div>
@@ -478,13 +495,36 @@ function calculateScore(station) {
               {/* Form to input review */}
               <div className="flex flex-col items-center justify-between mb-4">
                 <div className="flex">
-                  <input
-                    type="text"
-                    placeholder="Your review"
-                    value={newReview}
-                    onChange={(e) => setNewReview(e.target.value)}
-                    className="border border-gray-300 p-2 rounded-md w-72"
-                  />
+                  <div className="w-full flex flex-col justify-center text-xs rounded-lg items-center mt-8 px-8">
+                    <div className="text-xs text-gray-400 w-full px-4">
+                      Email
+                    </div>
+                    <div
+                      className={`w-full h-full transition-all duration-200 border-b-2 flex gap-2 py-2 rounded-lg ${
+                        isActive === "email"
+                          ? "border-[#44DDA0]"
+                          : "border-gray-100"
+                      }`}
+                      onClick={() => {
+                        setIsActive("email");
+                      }}
+                    >
+                      <div className="w-16 h-full flex justify-center items-center">
+                        <Icons
+                          name="email"
+                          width="20"
+                          height="20"
+                          color={isActive === "email" ? "#44DDA0" : "#676767"}
+                        />
+                      </div>
+                      <input
+                        type="email"
+                        placeholder="Enter your email"
+                        className="w-full bg-transparent text-white overflow-hidden focus:outline-none"
+                        onChange={(e) => setEmail(e.target.value)}
+                      />
+                    </div>
+                  </div>
                   <div className="flex my-2 ml-2">{renderStars(rating)}</div>
                 </div>
 
