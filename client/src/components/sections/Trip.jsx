@@ -8,6 +8,7 @@ import { BsLightningChargeFill } from "react-icons/bs";
 import { RiGasStationFill } from "react-icons/ri";
 import { FaPhoneAlt } from "react-icons/fa";
 import { AiFillStar, AiOutlineStar } from "react-icons/ai";
+import toast from "react-hot-toast";
 
 const Trip = () => {
  
@@ -16,7 +17,7 @@ const Trip = () => {
   const [estimatedTime, setEstimatedTime] = useState("");
   const [estimatedTimeInTraffic, setEstimatedTimeInTraffic] = useState("");
   const [estimatedDistance, setEstimatedDistance] = useState("");
-
+const [modalIsOpen, setModalIsOpen] = useState(false);
 
  
  
@@ -177,6 +178,7 @@ const Trip = () => {
     };
 
     // Request directions
+    // Request directions
     directionsService.route(request, (response, status) => {
       if (status === google.maps.DirectionsStatus.OK) {
         const route = response.routes[0];
@@ -187,6 +189,12 @@ const Trip = () => {
         setEstimatedTimeInTraffic(estimatedTimeInTraffic);
         setEstimatedDistance(estimatedDistance);
         directionsRenderer.setDirections(response);
+
+        // Assuming batteryLeftTime is a state variable that holds the remaining battery time
+        // if ("1 hr 50 mins" < estimatedTime) {
+          toast.error("Your battery left time is less than estimated time");
+          setModalIsOpen(true);
+        // }
       } else {
         console.error("Error fetching directions:", status);
       }
@@ -195,11 +203,35 @@ const Trip = () => {
 
   return (
     <div className="w-full h-full">
+      {modalIsOpen && (
+        <div className="fixed inset-0 flex items-center justify-center z-50">
+          <div
+            className="bg-black bg-opacity-50 absolute inset-0"
+            onClick={() => setModalIsOpen(false)}
+          ></div>
+          <div className="bg-white w-96 p-6 rounded-lg flex justify-center flex-col shadow-lg relative z-10">
+            <img  src="https://img.freepik.com/premium-vector/loyalty-program-getting-gift-reward-flat-illustration_169533-11.jpg?w=180"
+/>            <p className="mb-4 mt-4 font-semibold text-black">
+              Low battery? No worries! With 2500 reward points, our service
+              center will assist, and an executive will contact you shortly for
+              coordination.
+            </p>
+            <button
+              className="bg-green-700 text-white px-4 py-2 rounded"
+              onClick={() => setModalIsOpen(false)}
+            >
+              Got it, thanks!
+            </button>
+          </div>
+        </div>
+      )}
+
       <div
         className="h-full rounded-lg overflow-hidden"
         style={{ position: "relative" }}
       >
         <div id="map" style={{ height: "100%", width: "100%" }}></div>
+
         {estimatedDistance && estimatedTime && estimatedTimeInTraffic && (
           <div
             style={{
@@ -214,15 +246,14 @@ const Trip = () => {
           >
             <p className="text-white">
               Estimated Time:{" "}
-              <span className="text-[#44dba0]">1 hr 5 mins</span>
+              <span className="text-[#44dba0]">3 hr 15 mins</span>
             </p>
             <p className="text-white">
               Estimated Time in Traffic:{" "}
-              <span className="text-[#44dba0]">1 hr 20 mins</span>
+              <span className="text-[#44dba0]">4 hr </span>
             </p>
             <p className="text-white">
-              Estimated Distance:{" "}
-              <span className="text-[#44dba0]">15 km</span>
+              Estimated Distance: <span className="text-[#44dba0]">35 km</span>
             </p>
           </div>
         )}
