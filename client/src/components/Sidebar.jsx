@@ -79,9 +79,9 @@ const Sidebar = ({ data, getData, active, setActive }) => {
       <div className="text-2xl gap-2 py-16 w-full flex items-center justify-center">
         <div className="font-extrabold flex items-center gap-1 text-[#44DDA0]">
           <Icons name="thunder" width={24} height={24} color={"#44DDA0"} />
-          EV
+          VOLT
         </div>
-        <div>HUB</div>
+        <div>VOYAGE</div>
       </div>
       <div className="h-[0.5px] w-full bg-gray-500 bg-opacity-50" />
       <div className="flex flex-col w-full px-5 py-12 gap-2">
