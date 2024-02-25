@@ -45,14 +45,14 @@ const MainModule = ({ data, user, setUser, active, setIsLoggedIn }) => {
       <div className="w-full h-28 flex justify-between items-center">
         <div className="text-3xl font-semibold">{active}</div>
         <div
-          className="relative flex items-center"
+          className="relative flex gap-3 items-center"
           onClick={() => {
             setShowModal(!showModal);
           }}
         >
           <div className="flex items-center">
             <FaTrophy className="text-yellow-500 text-4xl mr-2" size={20} />
-            <p className="mb-2">2050</p>
+            <p>2050</p>
           </div>
 
           <div
