@@ -75,7 +75,7 @@ const Sidebar = ({ data, getData, active, setActive }) => {
   };
 
   return (
-    <div className="w-96 overflow-x-hidden relative bg-[#141414] overflow-y-auto h-full">
+    <div className="w-[22rem] overflow-x-hidden relative bg-[#141414] overflow-y-auto h-full">
       <div className="text-2xl gap-2 py-16 w-full flex items-center justify-center">
         <div className="font-extrabold flex items-center gap-1 text-[#44DDA0]">
           <Icons name="thunder" width={24} height={24} color={"#44DDA0"} />

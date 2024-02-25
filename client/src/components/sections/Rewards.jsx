@@ -1,4 +1,5 @@
 import React from "react";
+import { FaTrophy } from "react-icons/fa";
 
 const RewardSystem = ({ carbonFootprintReduction }) => {
   // Dummy data (replace with actual data)
@@ -11,13 +12,9 @@ const RewardSystem = ({ carbonFootprintReduction }) => {
     Math.floor(carbonFootprintReduction * pointsPerEmissionReduction);
 
   return (
-    <div>
-      <h2>Reward System</h2>
-      <p>Your current reward points: {rewardPoints}</p>
-      <p>
-        Unlock exclusive rewards and discounts by reducing your carbon
-        footprint!
-      </p>
+    <div className=" p-4 rounded-md shadow-md flex items-center justify-center mb-8">
+      <FaTrophy className="text-yellow-500 text-4xl mr-2" />
+      <p className="mb-2">{rewardPoints}</p>
     </div>
   );
 };
