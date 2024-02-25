@@ -5,6 +5,7 @@ import GasStation from "../../assets/teslaCity-a2bda4ca.png";
 import StackedBar from "../../charts/StackedBar";
 import axios from "axios";
 import toast from "react-hot-toast";
+import QRCode from "react-qr-code";
 
 const ProgressBar = ({ title, value, max, gasEqual }) => {
   const cells = [];
@@ -269,6 +270,9 @@ const Dashboard = () => {
     );
     setEvcar((prevState) => ({ ...prevState, time: timeRemaining }));
   }, [evcar?.evBatteryCapacity, evcar?.evName, evcar?.evPowerReserve]);
+
+  const [bookingModal, setBookingModal] = useState(false);
+  const [bookingData, setBookingData] = useState(null);
 
   return (
     <div className="w-full gap-4 h-fit overflow-y-auto flex flex-col justify-center items-center">
@@ -578,9 +582,7 @@ const Dashboard = () => {
                   </div>
                   <div className="flex flex-col">
                     <div className="text-[#575757]">Arrival</div>
-                    <div className="text-white text-base">
-                      {station?.arrivalTime}
-                    </div>
+                    <div className="text-white text-base">12:32 PM</div>
                   </div>
                   <div className="flex flex-col">
                     <div className="text-[#575757]">Per kwh</div>
@@ -591,9 +593,18 @@ const Dashboard = () => {
                   </div>
                   <div className="flex flex-col">
                     <div className="text-[#575757]">Departure</div>
-                    <div className="text-white text-base">
-                      {station?.departureTime}
-                    </div>
+                    <div className="text-white text-base">12:25 PM</div>
+                  </div>
+                </div>
+                <div className="w-1/2 h-full flex flex-col gap-2 items-center justify-center">
+                  <div
+                    className="bg-[#44DBA0] hover:bg-opacity-85 cursor-pointer rounded-lg w-full py-2 px-3 flex items-center justify-center"
+                    onClick={() => {
+                      setBookingModal(true);
+                      setBookingData(station);
+                    }}
+                  >
+                    Book
                   </div>
                 </div>
               </div>
@@ -601,6 +612,50 @@ const Dashboard = () => {
           })}
         </div>
       </div>
+      {bookingModal && (
+        <div className="fixed inset-0 flex items-center justify-center z-50">
+          <div
+            className="bg-black bg-opacity-50 absolute inset-0"
+            onClick={() => setBookingModal(false)}
+          ></div>
+          <div className="bg-white w-96 p-6 rounded-lg flex justify-center flex-col shadow-lg relative z-10">
+            {/* <img src="https://img.freepik.com/premium-vector/loyalty-program-getting-gift-reward-flat-illustration_169533-11.jpg?w=180" />{" "} */}
+            <div className="text-[#44DBA0] text-2xl font-bold">
+              Confirm Booking?
+            </div>
+            <p className="mb-4 mt-4 font-semibold text-black">
+              Are you sure you want to book this station?
+            </p>
+            <div className="w-full gap-2 flex justify-center items-center">
+              <button
+                className="text-[#44DBA0] w-full hover:bg-gray-100 px-4 py-2 rounded"
+                onClick={() => setBookingModal(false)}
+              >
+                Cancel
+              </button>
+              <button
+                className="bg-[#44DBA0] hover:bg-opacity-90 w-full text-white px-4 py-2 rounded"
+                onClick={() => {
+                  toast.success(
+                    "Booking details sent to registed mobile device!"
+                  );
+                  axios
+                    .post("http://localhost:5000/send-email")
+                    .then((res) => {
+                      console.log(res.data);
+                    })
+                    .catch((err) => {
+                      console.error(err);
+                    });
+                  setBookingModal(false);
+                }}
+              >
+                Confirm
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
