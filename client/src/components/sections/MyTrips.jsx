@@ -157,6 +157,7 @@ function MyTrips() {
         shadow="base"
         minW="container.md"
         zIndex="1"
+        // height="20"
       >
         <HStack spacing={2} justifyContent="space-between">
           <Box flexGrow={1}>
@@ -181,7 +182,7 @@ function MyTrips() {
           </Box>
 
           <ButtonGroup>
-            <Button colorScheme="pink" type="submit" onClick={calculateRoute}>
+            <Button colorScheme="green" type="submit" onClick={calculateRoute}>
               Calculate Route
             </Button>
             <IconButton

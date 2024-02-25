@@ -442,10 +442,13 @@ const Stations = () => {
       <div className="flex gap-x-24 justify-center mt-8">
         <div className="flex flex-col gap-y-6">
           <div className="border p-6 border- rounded-xl ">
-            <MdOutlineElectricBolt className="font-extrabold text-4xl text-[#44DDA0]" />
+            <div className="w-full items-center flex justify-between">
+              <MdOutlineElectricBolt className="font-extrabold text-4xl text-[#44DDA0]" />
+              <div>{renderStars(4)}</div>
+            </div>
             <div className="flex justify-between my-4">
               <h2 className="font-bold text-xl">
-                <span className="white pr-2">1.5</span>miles
+                <span className="white pr-2">{estimatedDistance}</span>
               </h2>
               <MdCancelPresentation className="text-4xl text-[#44DDA0]" />
             </div>
@@ -453,32 +456,34 @@ const Stations = () => {
               {optimalStation?.displayName?.text}
             </p>
             <div className="w-full text-[#575757] mt-5 flex justify-between items-center">
-              <div className="flex">
+              <div className="flex gap-4">
                 {optimalStation?.evChargeOptions?.connectorAggregation?.map(
                   (connector, i) => (
-                    <div key={i} className="flex gap-2">
+                    <div key={i} className="flex items-center gap-2">
                       <div>Type</div>
 
                       <div className="flex gap-1 items-center">
-                        <span className="text-xl text-white">
+                        <span className="text-white">
                           {formatPrimaryType(connector.type)}
                         </span>
                       </div>
                       <div>Price</div>
                       <span
-                        className={`text-3xl "text-[#44DDA0]"
+                        className={`text-lg text-[#44DDA0]
                             
-                        }`}
+                        `}
                       >
                         {connector.maxChargeRateKw} {" kW"}
                       </span>
                     </div>
                   )
                 )}
-                <div className="ml-2">Slots</div>
-                <span className={`text-3xl "text-[#44DDA0]"`}>
-                  {optimalStation?.evChargeOptions?.connectorCount}
-                </span>
+                <div className="flex items-center">
+                  <div className="">Slots</div>
+                  <span className={`text-lg "text-[#44DDA0]"`}>
+                    {optimalStation?.evChargeOptions?.connectorCount}
+                  </span>
+                </div>
               </div>
             </div>
           </div>
@@ -500,7 +505,7 @@ const Stations = () => {
                       Add a review
                     </div>
                     <div
-                      className={`w-80 h-full mt-6 transition-all duration-200 border-b-2 flex justify-center items-center gap-2 py-2  ${
+                      className={`w-80 h-full mt-2 rounded-lg px-2 transition-all duration-200 border-b-2 flex justify-center items-center gap-2 py-2  ${
                         isActive === "email"
                           ? "border-[#44DDA0]"
                           : "border-gray-100"
@@ -509,7 +514,6 @@ const Stations = () => {
                         setIsActive("email");
                       }}
                     >
-                    
                       <input
                         type="text"
                         placeholder="Your review"

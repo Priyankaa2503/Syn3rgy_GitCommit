@@ -360,7 +360,7 @@ const Dashboard = () => {
               <span className="text-3xl text-white">
                 {evcar?.evPowerReserve}
               </span>
-              {" km"}
+              {" mi"}
             </div>
           </div>
         </div>
@@ -390,38 +390,6 @@ const Dashboard = () => {
       <div className="w-full p-8 shadow-md shadow-[#00000040] rounded-xl bg-[#141414]">
         <div className="w-full items-center justify-between flex">
           <div className="text-lg font-semibold">Gas Savings</div>
-          <div className="relative">
-            <div
-              className="cursor-pointer"
-              onClick={() => {
-                setShowGasSavingsDropdown(true);
-              }}
-            >
-              {gasSavings}
-            </div>
-            {showGasSavingsDropdown && (
-              <div className="w-32 bg-[#0F0F0F] absolute top-full right-0 shadow-md rounded-xl z-10">
-                <div
-                  className="w-full h-12 flex justify-center items-center cursor-pointer"
-                  onClick={() => {
-                    setGasSavings("Year");
-                    setShowGasSavingsDropdown(false);
-                  }}
-                >
-                  Year
-                </div>
-                <div
-                  className="w-full h-12 flex justify-center items-center cursor-pointer"
-                  onClick={() => {
-                    setGasSavings("Month");
-                    setShowGasSavingsDropdown(false);
-                  }}
-                >
-                  Month
-                </div>
-              </div>
-            )}
-          </div>
         </div>
         <div className="w-full text-[#575757] mt-5 flex justify-between items-center">
           <div className="flex flex-col">
@@ -450,8 +418,8 @@ const Dashboard = () => {
           </div>
         </div>
         <div className="flex flex-col gap-2 w-full mt-5">
-          <ProgressBar title="CA$32" value={3} max={12} />
-          <ProgressBar title="CA$57" value={7} max={12} gasEqual={true} />
+          <ProgressBar title="$32" value={3} max={12} />
+          <ProgressBar title="$57" value={7} max={12} gasEqual={true} />
         </div>
       </div>
       {/* Charge statistics */}
@@ -563,12 +531,22 @@ const Dashboard = () => {
                       {details?.shortFormattedAddress}
                     </div>
                   </div>
-                  <div className="flex flex-col gap-1">
-                    <div className="text-[#575757] text-xs">
-                      Ports available
+                  <div className="flex gap-4">
+                    <div className="flex flex-col gap-1">
+                      <div className="text-[#575757] text-xs">
+                        Ports available
+                      </div>
+                      <div className="text-white text-sm">
+                        {details?.evChargeOptions?.connectorCount}
+                      </div>
                     </div>
-                    <div className="text-white text-sm">
-                      {details?.evChargeOptions?.connectorCount}
+                    <div className="flex flex-col gap-1">
+                      <div className="text-[#575757] text-xs">
+                        Number of visits
+                      </div>
+                      <div className="text-white text-sm">
+                        {station?.noOfVisits}
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -581,8 +559,8 @@ const Dashboard = () => {
                     </div>
                   </div>
                   <div className="flex flex-col">
-                    <div className="text-[#575757]">Arrival</div>
-                    <div className="text-white text-base">12:32 PM</div>
+                    <div className="text-[#575757]">Slot Timing: Start</div>
+                    <div className="text-white text-base">12:25 PM</div>
                   </div>
                   <div className="flex flex-col">
                     <div className="text-[#575757]">Per kwh</div>
@@ -592,8 +570,8 @@ const Dashboard = () => {
                     </div>
                   </div>
                   <div className="flex flex-col">
-                    <div className="text-[#575757]">Departure</div>
-                    <div className="text-white text-base">12:25 PM</div>
+                    <div className="text-[#575757]">Slot Timing: End</div>
+                    <div className="text-white text-base">12:32 PM</div>
                   </div>
                 </div>
                 <div className="w-1/2 h-full flex flex-col gap-2 items-center justify-center">
