@@ -127,7 +127,6 @@ const Stations = () => {
   }
 
   function addMarker(station) {
-    console.log("Adding marker for station:", station);
     var marker = new google.maps.Marker({
       position: {
         lat: station.location.latitude,
@@ -139,7 +138,7 @@ const Stations = () => {
         scaledSize: new google.maps.Size(50, 70),
       },
     });
-    console.log(station.formattedAddress);
+    // console.log(station.formattedAddress);
     var infowindow = new google.maps.InfoWindow({
       content: `<div style='height:100px; width:200px; color:black'>
       ${station.formattedAddress}<br>
@@ -235,13 +234,6 @@ const Stations = () => {
       destination.longitude
     );
 
-    // Configure directions request
-    // const request = {
-    //   origin: originLatLng,
-    //   destination: destinationLatLng,
-    //   travelMode: google.maps.TravelMode.DRIVING,
-    // };
-
     const trafficLayer = new google.maps.TrafficLayer();
     trafficLayer.setMap(map);
     const request = {
@@ -271,6 +263,47 @@ const Stations = () => {
     });
   };
 
+const [optimalStation, setOptimalStation] = useState(null);
+
+  function calculateOptimalPath() {
+    // Calculate score for each station
+  console.log(stations);
+    const stationsWithScore = stations?.map((station) => ({
+      ...station,
+      score: calculateScore(station),
+    }));
+
+    // Sort stations by score in ascending order
+    stationsWithScore.sort((a, b) => a.score - b.score);
+
+    // The station with the lowest score is the most optimal
+    return stationsWithScore[0];
+  }
+
+function calculateScore(station) {
+  let score = 0;
+  station.evChargeOptions.connectorAggregation.forEach((connector) => {
+    score += station.evChargeOptions.connectorCount + connector.maxChargeRateKw;
+  });
+
+  // Subtract the distance from the score
+  score -= station.distance;
+
+  return score;
+}
+  useEffect(() => {
+    if (stations.length > 0) {
+      const optimalStation = calculateOptimalPath();
+      setOptimalStation(optimalStation);
+    }
+  }, [stations]);
+  
+  useEffect(() => {
+   console.log(optimalStation);
+  
+  
+  }, [optimalStation])
+  
   return (
     <div className="w-full h-full">
       <div
@@ -351,6 +384,7 @@ const Stations = () => {
                 <p className="my-2 ml-2">{station?.internationalPhoneNumber}</p>
               </div>
               {/* <p>{station?.websiteUri}</p> */}
+              Connector Count : {station?.evChargeOptions?.connectorCount}
               {station?.evChargeOptions?.connectorAggregation?.map(
                 (connector, i) => (
                   <div key={i} className="bg-gray-800 p-4 rounded-md mb-4">
@@ -387,46 +421,9 @@ const Stations = () => {
           ))}
         </div>
       </div>
-      <div className="flex gap-x-24 justify-center mt-20">
+        <p className="text-3xl mt-12">Suggested Optimal Path</p>
+      <div className="flex gap-x-24 justify-center mt-8">
         <div className="flex flex-col gap-y-6">
-          <div className="border p-6 border-[#44DDA0] rounded-xl ">
-            <MdOutlineElectricBolt className="font-extrabold text-4xl text-[#44DDA0]" />
-            <div className="flex justify-between my-4">
-              <h2 className="font-bold text-xl">
-                <span className="white pr-2">1.5</span>miles
-              </h2>
-              <MdCancelPresentation className="text-4xl text-[#44DDA0]" />
-            </div>
-            <p className="text-lg font-medium">Tesla Station</p>
-            <div className="w-full gap-x-12 text-[#575757] mt-5 flex justify-between items-center">
-              <div className="flex flex-col">
-                <div>Type</div>
-                <div className="flex gap-1 items-center">
-                  <span className="text-3xl text-white">{evcar.type}</span>
-                </div>
-              </div>
-              <div className="flex flex-col">
-                <div>Price</div>
-                <div className="flex gap-1 items-center">
-                  <span
-                    className={`text-3xl ${
-                      evcar.battery > 50 ? "text-[#44DDA0]" : "text-[#B23434]"
-                    }`}
-                  >
-                    {evcar.price}
-                  </span>
-                  {" kW"}
-                </div>
-              </div>
-              <div className="flex flex-col">
-                <div>Slot</div>
-                <div className="flex gap-1 items-center">
-                  <span className="text-3xl text-white">{evcar.slot}</span>
-                  {" miles"}
-                </div>
-              </div>
-            </div>
-          </div>
           <div className="border p-6 border- rounded-xl ">
             <MdOutlineElectricBolt className="font-extrabold text-4xl text-[#44DDA0]" />
             <div className="flex justify-between my-4">
@@ -435,33 +432,38 @@ const Stations = () => {
               </h2>
               <MdCancelPresentation className="text-4xl text-[#44DDA0]" />
             </div>
-            <p className="text-lg font-medium">Tesla Station</p>
+            <p className="text-lg font-medium">
+              {optimalStation?.displayName?.text}
+            </p>
             <div className="w-full text-[#575757] mt-5 flex justify-between items-center">
-              <div className="flex flex-col">
-                <div>Type</div>
-                <div className="flex gap-1 items-center">
-                  <span className="text-3xl text-white">{evcar.type}</span>
-                </div>
-              </div>
-              <div className="flex flex-col">
-                <div>Price</div>
-                <div className="flex gap-1 items-center">
-                  <span
-                    className={`text-3xl ${
-                      evcar.battery > 50 ? "text-[#44DDA0]" : "text-[#B23434]"
-                    }`}
-                  >
-                    {evcar.price}
-                  </span>
-                  {" kW"}
-                </div>
-              </div>
-              <div className="flex flex-col">
-                <div>Slot</div>
-                <div className="flex gap-1 items-center">
-                  <span className="text-3xl text-white">{evcar.slot}</span>
-                  {" miles"}
-                </div>
+              <div className="flex">
+                {optimalStation?.evChargeOptions?.connectorAggregation?.map(
+                  (connector, i) => (
+                    <div key={i} className="flex gap-2">
+                      <div>Type</div>
+
+                      <div className="flex gap-1 items-center">
+                        <span className="text-xl text-white">
+                          {formatPrimaryType(connector.type)}
+                        </span>
+                      </div>
+                      <div>Price</div>
+                      <span
+                        className={`text-3xl "text-[#44DDA0]"
+                            
+                        }`}
+                      >
+                        {connector.maxChargeRateKw} {" kW"}
+                      </span>
+                    </div>
+                  )
+                )}
+                <div className="ml-2">Slots</div>
+                <span
+                  className={`text-3xl "text-[#44DDA0]"`}
+                >
+                  {optimalStation?.evChargeOptions?.connectorCount}
+                </span>
               </div>
             </div>
           </div>
