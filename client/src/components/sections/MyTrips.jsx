@@ -193,8 +193,12 @@ function MyTrips() {
           </ButtonGroup>
         </HStack>
         <HStack spacing={4} mt={4} justifyContent="space-between">
-          <Text className="text-black">Distance: {distance} </Text>
-          <Text className="text-black">Duration: {duration} </Text>
+          {distance && duration && (
+            <>
+              <Text className="text-black">Distance: {distance} </Text>
+              <Text className="text-black">Duration: {duration} </Text>
+            </>
+          )}
           {/* <IconButton
             aria-label="center back"
             icon={<FaLocationArrow />}
