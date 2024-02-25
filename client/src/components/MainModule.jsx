@@ -6,6 +6,7 @@ import toast from "react-hot-toast";
 import CarbonFootprint from "./sections/CarbonFootprint";
 import RewardSystem from "./sections/Rewards";
 import Trip from "./sections/Trip";
+import { FaTrophy } from "react-icons/fa";
 const MainModule = ({ data, user, setUser, active, setIsLoggedIn }) => {
   const getSection = () => {
     switch (active) {
@@ -17,10 +18,10 @@ const MainModule = ({ data, user, setUser, active, setIsLoggedIn }) => {
         return <MyTrips />;
       case "Car Details":
         return <CarDetails />;
-        case "Carbon Footprint":
+      case "Carbon Footprint":
         return <CarbonFootprint />;
-        case "My Trip":
-        return <Trip  />;
+      case "My Trip":
+        return <Trip />;
     }
   };
 
@@ -41,14 +42,19 @@ const MainModule = ({ data, user, setUser, active, setIsLoggedIn }) => {
 
   return (
     <div className="w-full h-screen flex flex-col items-center justify-center p-5 gap-4">
-      <div className="w-full h-32 flex justify-between items-center">
+      <div className="w-full h-28 flex justify-between items-center">
         <div className="text-3xl font-semibold">{active}</div>
         <div
-          className="relative"
+          className="relative flex items-center"
           onClick={() => {
             setShowModal(!showModal);
           }}
         >
+          <div className="flex items-center">
+            <FaTrophy className="text-yellow-500 text-4xl mr-2" size={20} />
+            <p className="mb-2">2050</p>
+          </div>
+
           <div
             className={`px-4 flex relative cursor-pointer hover:bg-gray-300 hover:bg-opacity-15 items-center text-[#44DDA0] gap-2 py-2 ${
               showModal && "bg-opacity-15 bg-gray-300"
