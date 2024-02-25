@@ -9,89 +9,17 @@ import { RiGasStationFill } from "react-icons/ri";
 import { FaPhoneAlt } from "react-icons/fa";
 import { AiFillStar, AiOutlineStar } from "react-icons/ai";
 
-const Stations = () => {
-  const [evcar, setEvcar] = useState({
-    car: "Nissan",
-    battery: 58,
-    time: "5:21",
-    powerReserve: 400,
-    range: 340,
-    temp: 75.2,
-    type: "DC",
-    slot: 5,
-    price: 60,
-    status: "Good",
-  });
+const Trip = () => {
+ 
   let map;
   const [stations, setStations] = useState([]);
   const [estimatedTime, setEstimatedTime] = useState("");
   const [estimatedTimeInTraffic, setEstimatedTimeInTraffic] = useState("");
   const [estimatedDistance, setEstimatedDistance] = useState("");
-  const [filteredStations, setFilteredStations] = useState([]);
-  const [selectedFilters, setSelectedFilters] = useState([]);
-  const [reviews, setReviews] = useState([]);
-  const [newReview, setNewReview] = useState("");
-  const [rating, setRating] = useState(0);
 
-  useEffect(() => {
-    // Initialize reviews with sample data
-    setReviews([
-      {
-        text: "Great station!",
-        rating: 5,
-        timestamp: new Date().toISOString(),
-      },
-      {
-        text: "Good experience overall.",
-        rating: 4,
-        timestamp: new Date("2024-02-24T10:30:00").toISOString(),
-      },
-    ]);
-  }, []);
 
-  // Function to handle adding a new review
-  const addReview = () => {
-    if (newReview && rating) {
-      const newReviewObj = {
-        text: newReview,
-        rating: rating,
-        timestamp: new Date().toISOString(),
-      };
-      setReviews([...reviews, newReviewObj]);
-      // Reset the form
-      setNewReview("");
-      setRating(0);
-    }
-  };
-
-  // Function to render star icons based on rating
-  const renderStars = (numStars) => {
-    const stars = [];
-    for (let i = 1; i <= 5; i++) {
-      stars.push(
-        i <= numStars ? (
-          <AiFillStar
-            key={i}
-            className="text-yellow-400 cursor-pointer"
-            onClick={() => setRating(i)}
-          />
-        ) : (
-          <AiOutlineStar
-            key={i}
-            className="text-gray-400 cursor-pointer"
-            onClick={() => setRating(i)}
-          />
-        )
-      );
-    }
-    return <div className="flex">{stars}</div>;
-  };
-
-  // Sort reviews by timestamp in descending order
-  const sortedReviews = [...reviews].sort((a, b) =>
-    a.timestamp < b.timestamp ? 1 : -1
-  );
-
+ 
+ 
   useEffect(() => {
     // Load the Google Maps script
     const script = document.createElement("script");
@@ -101,7 +29,10 @@ const Stations = () => {
     script.onload = () => {
       initMap();
       // addMarker();
-      getNearbyStations({ latitude: 37.7937, longitude: -122.3965 }, map);
+      getNearbyStations(
+        { latitude: 25.164692557170525, longitude: 55.2106719405267 },
+        map
+      );
     };
     document.head.appendChild(script);
 
@@ -114,11 +45,12 @@ const Stations = () => {
   function initMap() {
     map = new google.maps.Map(document.getElementById("map"), {
       zoom: 16,
-      center: { lat: 37.7937, lng: -122.3965 },
+      center: { lat: 25.164692557170525, lng: 55.2106719405267 },
     });
 
     new google.maps.Marker({
-      position: { lat: 37.7937, lng: -122.3965 },
+      // 25.164692557170525, 55.2106719405267
+      position: { lat: 25.164692557170525, lng: 55.2106719405267 },
       map: map,
       icon: {
         url: "http://maps.google.com/mapfiles/ms/icons/red-dot.png",
@@ -171,10 +103,10 @@ const Stations = () => {
       locationRestriction: {
         circle: {
           center: {
-            latitude: 37.7937,
-            longitude: -122.3965,
+            latitude: 25.164692557170525,
+            longitude: 55.2106719405267,
           },
-          radius: 200.0,
+          radius: 1000.0,
         },
       },
     };
@@ -207,9 +139,7 @@ const Stations = () => {
       .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
       .join(" ");
   };
-
   const getDirections = async (origin, destination) => {
-    const apiKey = "AIzaSyAGHFR3hfwbf_yGyfkPFZ7aSfj7Jr7RDfg";
     const directionsService = new google.maps.DirectionsService();
     const directionsRenderer = new google.maps.DirectionsRenderer();
 
@@ -217,7 +147,7 @@ const Stations = () => {
     if (!map) {
       map = new google.maps.Map(document.getElementById("map"), {
         zoom: 16,
-        center: { lat: 37.7937, lng: -122.3965 },
+        center: { lat: 25.164692557170525, lng: 55.2106719405267 },
       });
     }
 
@@ -263,47 +193,6 @@ const Stations = () => {
     });
   };
 
-const [optimalStation, setOptimalStation] = useState(null);
-
-  function calculateOptimalPath() {
-    // Calculate score for each station
-  console.log(stations);
-    const stationsWithScore = stations?.map((station) => ({
-      ...station,
-      score: calculateScore(station),
-    }));
-
-    // Sort stations by score in ascending order
-    stationsWithScore.sort((a, b) => a.score - b.score);
-
-    // The station with the lowest score is the most optimal
-    return stationsWithScore[0];
-  }
-
-function calculateScore(station) {
-  let score = 0;
-  station.evChargeOptions.connectorAggregation.forEach((connector) => {
-    score += station.evChargeOptions.connectorCount + connector.maxChargeRateKw;
-  });
-
-  // Subtract the distance from the score
-  score -= station.distance;
-
-  return score;
-}
-  useEffect(() => {
-    if (stations.length > 0) {
-      const optimalStation = calculateOptimalPath();
-      setOptimalStation(optimalStation);
-    }
-  }, [stations]);
-  
-  useEffect(() => {
-   console.log(optimalStation);
-  
-  
-  }, [optimalStation])
-  
   return (
     <div className="w-full h-full">
       <div
@@ -325,15 +214,15 @@ function calculateScore(station) {
           >
             <p className="text-white">
               Estimated Time:{" "}
-              <span className="text-[#44dba0]">{estimatedTime}</span>
+              <span className="text-[#44dba0]">1 hr 5 mins</span>
             </p>
             <p className="text-white">
               Estimated Time in Traffic:{" "}
-              <span className="text-[#44dba0]">{estimatedTimeInTraffic}</span>
+              <span className="text-[#44dba0]">1 hr 20 mins</span>
             </p>
             <p className="text-white">
               Estimated Distance:{" "}
-              <span className="text-[#44dba0]">{estimatedDistance}</span>
+              <span className="text-[#44dba0]">15 km</span>
             </p>
           </div>
         )}
@@ -383,7 +272,7 @@ function calculateScore(station) {
                 <FaPhoneAlt size={16} />
                 <p className="my-2 ml-2">{station?.internationalPhoneNumber}</p>
               </div>
-             {station?.evChargeOptions?.connectorAggregation?.map(
+              {station?.evChargeOptions?.connectorAggregation?.map(
                 (connector, i) => (
                   <div key={i} className="bg-gray-800 p-4 rounded-md mb-4">
                     <p className="text-[#44dba0]">
@@ -405,7 +294,10 @@ function calculateScore(station) {
                 className="bg-[#44dba0] text-white rounded-md px-4 py-2 mr-2"
                 onClick={() =>
                   getDirections(
-                    { latitude: 37.7937, longitude: -122.3965 },
+                    {
+                      latitude: 25.164692557170525,
+                      longitude: 55.2106719405267,
+                    },
                     {
                       latitude: station?.location?.latitude,
                       longitude: station?.location?.longitude,
@@ -419,106 +311,9 @@ function calculateScore(station) {
           ))}
         </div>
       </div>
-        <p className="text-3xl mt-12">Suggested Optimal Path</p>
-      <div className="flex gap-x-24 justify-center mt-8">
-        <div className="flex flex-col gap-y-6">
-          <div className="border p-6 border- rounded-xl ">
-            <MdOutlineElectricBolt className="font-extrabold text-4xl text-[#44DDA0]" />
-            <div className="flex justify-between my-4">
-              <h2 className="font-bold text-xl">
-                <span className="white pr-2">1.5</span>miles
-              </h2>
-              <MdCancelPresentation className="text-4xl text-[#44DDA0]" />
-            </div>
-            <p className="text-lg font-medium">
-              {optimalStation?.displayName?.text}
-            </p>
-            <div className="w-full text-[#575757] mt-5 flex justify-between items-center">
-              <div className="flex">
-                {optimalStation?.evChargeOptions?.connectorAggregation?.map(
-                  (connector, i) => (
-                    <div key={i} className="flex gap-2">
-                      <div>Type</div>
-
-                      <div className="flex gap-1 items-center">
-                        <span className="text-xl text-white">
-                          {formatPrimaryType(connector.type)}
-                        </span>
-                      </div>
-                      <div>Price</div>
-                      <span
-                        className={`text-3xl "text-[#44DDA0]"
-                            
-                        }`}
-                      >
-                        {connector.maxChargeRateKw} {" kW"}
-                      </span>
-                    </div>
-                  )
-                )}
-                <div className="ml-2">Slots</div>
-                <span
-                  className={`text-3xl "text-[#44DDA0]"`}
-                >
-                  {optimalStation?.evChargeOptions?.connectorCount}
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className="">
-          <p className="text-lg font-medium text-white ml-6 ">
-            About the EV Station
-          </p>
-          <img src={Car} alt="" className="h-64" />
-
-          {/* Reviews And Ratings */}
-          <div className="w-full text-[#575757] mt-5 flex  justify-between items-center">
-            <div className="flex flex-col mt-8">
-              {/* Form to input review */}
-              <div className="flex flex-col items-center justify-between mb-4">
-                <div className="flex">
-                  <input
-                    type="text"
-                    placeholder="Your review"
-                    value={newReview}
-                    onChange={(e) => setNewReview(e.target.value)}
-                    className="border border-gray-300 p-2 rounded-md w-72"
-                  />
-                  <div className="flex my-2 ml-2">{renderStars(rating)}</div>
-                </div>
-
-                <div className="flex flex-col py-2  items-center">
-                  <button
-                    onClick={addReview}
-                    className="bg-[#44bda0] text-white  px-4 py-2 rounded-md"
-                  >
-                    Add Review
-                  </button>
-                </div>
-              </div>
-
-              {/* Display reviews */}
-              {sortedReviews.map((review, index) => (
-                <div
-                  key={index}
-                  className="border border-gray-300 p-4 rounded-md mb-4"
-                >
-                  <div className="flex items-center justify-between">
-                    <p className="font-semibold">{review.text}</p>
-                    {renderStars(review.rating)}
-                  </div>
-                  <p className="text-gray-500">
-                    {new Date(review.timestamp).toLocaleString()}
-                  </p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </div>
+      {/* <p className="text-3xl mt-12">Suggested Optimal Path</p> */}
     </div>
   );
 };
 
-export default Stations;
+export default Trip;

@@ -3,6 +3,9 @@ import { Dashboard, MyTrips, Stations, CarDetails } from "./sections";
 import Icons from "./Icons";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import CarbonFootprint from "./sections/CarbonFootprint";
+import RewardSystem from "./sections/Rewards";
+import Trip from "./sections/Trip";
 const MainModule = ({ data, user, setUser, active, setIsLoggedIn }) => {
   const getSection = () => {
     switch (active) {
@@ -10,10 +13,14 @@ const MainModule = ({ data, user, setUser, active, setIsLoggedIn }) => {
         return <Dashboard data={data} />;
       case "Stations":
         return <Stations />;
-      case "My Trips":
+      case "Plan a Trip":
         return <MyTrips />;
       case "Car Details":
         return <CarDetails />;
+        case "Carbon Footprint":
+        return <CarbonFootprint />;
+        case "My Trip":
+        return <Trip  />;
     }
   };
 

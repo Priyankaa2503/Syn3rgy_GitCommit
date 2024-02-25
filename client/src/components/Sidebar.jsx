@@ -87,7 +87,9 @@ const Sidebar = ({ data, getData, active, setActive }) => {
       <div className="flex flex-col w-full px-5 py-12 gap-2">
         <Link name="Dashboard" active={active} setActive={setActive} />
         <Link name="Stations" active={active} setActive={setActive} />
-        <Link name="My Trips" active={active} setActive={setActive} />
+        <Link name="Plan a Trip" active={active} setActive={setActive} />
+        <Link name="My Trip" active={active} setActive={setActive} />
+        <Link name="Carbon Footprint" active={active} setActive={setActive} />
         {/* <Link name="Subscription Plan" active={active} setActive={setActive} /> */}
       </div>
       <div className="w-full p-5 flex flex-col gap-5">
