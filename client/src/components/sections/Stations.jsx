@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import { MdOutlineElectricBolt, MdCancelPresentation } from "react-icons/md";
 import Car from "../../assets/Car.png";
-import StationImage from "../../assets/evStation.svg";
+import StationImage from "../../assets/evstn.jpg";
 import EV from "../../assets/evicon.png";
 import Line from "../../charts/Line";
 import { BsLightningChargeFill } from "react-icons/bs";
@@ -493,7 +493,7 @@ const Stations = () => {
           <p className="text-lg font-medium text-white ml-6 ">
             About the EV Station
           </p>
-          <img src={StationImage} alt="" className="h-64" />
+          <img src={StationImage} alt="" className="h-64 mt-4 rounded-lg" />
 
           {/* Reviews And Ratings */}
           <div className="w-full text-[#575757] mt-5 flex  justify-between items-center">
