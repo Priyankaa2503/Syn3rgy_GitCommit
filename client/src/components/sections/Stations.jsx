@@ -399,7 +399,7 @@ const Stations = () => {
                 <FaPhoneAlt size={16} />
                 <p className="my-2 ml-2">{station?.internationalPhoneNumber}</p>
               </div>
-             {station?.evChargeOptions?.connectorAggregation?.map(
+              {station?.evChargeOptions?.connectorAggregation?.map(
                 (connector, i) => (
                   <div key={i} className="bg-gray-800 p-4 rounded-md mb-4">
                     <p className="text-[#44dba0]">
@@ -494,13 +494,13 @@ const Stations = () => {
             <div className="flex flex-col mt-8">
               {/* Form to input review */}
               <div className="flex flex-col items-center justify-between mb-4">
-                <div className="flex">
-                  <div className="w-full flex flex-col justify-center text-xs rounded-lg items-center mt-8 px-8">
-                    <div className="text-xs text-gray-400 w-full px-4">
-                      Email
+                <div className="flex items-center justify-center">
+                  <div className="w-80 flex flex-col justify-center text-xs rounded-lg items-center mt-8 px-8">
+                    <div className="text-xs text-gray-400 w-full ">
+                      Add a review
                     </div>
                     <div
-                      className={`w-full h-full transition-all duration-200 border-b-2 flex gap-2 py-2 rounded-lg ${
+                      className={`w-80 h-full mt-6 transition-all duration-200 border-b-2 flex justify-center items-center gap-2 py-2  ${
                         isActive === "email"
                           ? "border-[#44DDA0]"
                           : "border-gray-100"
@@ -509,26 +509,20 @@ const Stations = () => {
                         setIsActive("email");
                       }}
                     >
-                      <div className="w-16 h-full flex justify-center items-center">
-                        <Icons
-                          name="email"
-                          width="20"
-                          height="20"
-                          color={isActive === "email" ? "#44DDA0" : "#676767"}
-                        />
-                      </div>
+                    
                       <input
-                        type="email"
-                        placeholder="Enter your email"
-                        className="w-full bg-transparent text-white overflow-hidden focus:outline-none"
-                        onChange={(e) => setEmail(e.target.value)}
+                        type="text"
+                        placeholder="Your review"
+                        value={newReview}
+                        className="w-full mt-6 bg-transparent text-white overflow-hidden focus:outline-none"
+                        onChange={(e) => setNewReview(e.target.value)}
                       />
                     </div>
                   </div>
                   <div className="flex my-2 ml-2">{renderStars(rating)}</div>
                 </div>
 
-                <div className="flex flex-col py-2  items-center">
+                <div className="flex flex-col py-2  items-center mt-6">
                   <button
                     onClick={addReview}
                     className="bg-[#44bda0] text-white  px-4 py-2 rounded-md"
