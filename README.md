@@ -2,7 +2,6 @@
 
 Welcome to VoltVoyage – Your Ultimate Electric Vehicle Route Planner!
 
-![VoltVoyage Logo](images/voltvoyage_logo.png)
 
 ## Overview 🌐
 
